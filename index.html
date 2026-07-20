@@ -664,15 +664,19 @@ let NET_MODE=false, netRole=null, netPeer=null, netConn=null, applyingRemote=fal
 let myNetPick=null, opponentNetPick=null;
 let joinTimeoutId=null;
 
-/* STUN อย่างเดียว (ค่า default ของ PeerJS) มักเชื่อมต่อไม่ติดถ้าเพื่อนสองคนอยู่คนละเครือข่าย
-   (เช่นคนนึงใช้ 4G อีกคนใช้ wifi) เพราะ NAT บล็อกการเชื่อมตรง — ต้องมี TURN relay ช่วยเป็นทางสำรอง
-   ไม่งั้นปุ่ม "เข้าร่วมห้อง" จะค้างเฉยๆ โดยไม่มี error ให้เห็นเลย */
-const ICE_CONFIG = { iceServers: [
-  { urls:'stun:stun.l.google.com:19302' },
-  { urls:'turn:openrelay.metered.ca:80', username:'openrelayproject', credential:'openrelayproject' },
-  { urls:'turn:openrelay.metered.ca:443', username:'openrelayproject', credential:'openrelayproject' },
-  { urls:'turn:openrelay.metered.ca:443?transport=tcp', username:'openrelayproject', credential:'openrelayproject' }
-]};
+/* PeerJS ค่าเริ่มต้นมีแค่ STUN เฉยๆ ถ้าฝั่งใดฝั่งหนึ่งอยู่หลัง NAT ที่เข้มงวด (มือถือ/เน็ตบ้านบางเจ้า)
+   การเชื่อมต่อ WebRTC ตรงๆ จะเงียบๆ ไม่สำเร็จ ไม่มี error ให้เห็นเลย — กด join แล้วค้างเฉยๆ
+   เพิ่ม TURN relay (public test relay จาก openrelay.metered.ca) เป็นทางสำรองให้ traffic วิ่งผ่านได้เสมอ */
+const PEER_ICE_CONFIG={
+  config:{
+    iceServers:[
+      {urls:'stun:stun.l.google.com:19302'},
+      {urls:'turn:openrelay.metered.ca:80', username:'openrelayproject', credential:'openrelayproject'},
+      {urls:'turn:openrelay.metered.ca:443', username:'openrelayproject', credential:'openrelayproject'},
+      {urls:'turn:openrelay.metered.ca:443?transport=tcp', username:'openrelayproject', credential:'openrelayproject'}
+    ]
+  }
+};
 
 function sendNet(msg){ if(netConn && netConn.open) netConn.send(JSON.stringify(msg)); }
 
@@ -735,7 +739,7 @@ function startHostPeer(){
   document.getElementById('roomCodeDisplay').textContent='กำลังสร้างห้อง...';
   document.getElementById('btnRetryHost').style.display='none';
   if(netPeer){ try{ netPeer.destroy(); }catch(e){} netPeer=null; }
-  netPeer=new Peer(undefined,{config:ICE_CONFIG});
+  netPeer=new Peer(undefined, PEER_ICE_CONFIG);
   netPeer.on('open', id=>{ document.getElementById('roomCodeDisplay').textContent=id; });
   netPeer.on('connection', c=>{ wireConn(c,'host'); });
   netPeer.on('error', e=>{
@@ -758,37 +762,32 @@ document.getElementById('btnCopyCode').addEventListener('click',()=>{
   const txt=document.getElementById('roomCodeDisplay').textContent;
   navigator.clipboard && navigator.clipboard.writeText(txt).catch(()=>{});
 });
-function clearJoinTimeout(){ if(joinTimeoutId){ clearTimeout(joinTimeoutId); joinTimeoutId=null; } }
 document.getElementById('btnJoinConnect').addEventListener('click',()=>{
   const code=document.getElementById('joinCodeInput').value.trim();
   if(!code) return;
-  const btn=document.getElementById('btnJoinConnect');
-  const statusEl=document.getElementById('joinStatusMsg');
-  clearJoinTimeout();
-  btn.disabled=true;
-  statusEl.textContent='กำลังเชื่อมต่อ...';
+  document.getElementById('joinStatusMsg').textContent='กำลังเชื่อมต่อ...';
   if(netPeer){ try{ netPeer.destroy(); }catch(e){} netPeer=null; }
-  netPeer=new Peer(undefined,{config:ICE_CONFIG});
-  // ถ้าเชื่อมต่อไม่สำเร็จภายใน 15 วิ (เช่น ICE ผ่านไม่ได้เพราะสองฝั่งอยู่คนละเครือข่าย) ให้เลิกรอแล้วแจ้งเตือน แทนที่จะค้างเงียบๆ
+  if(joinTimeoutId){ clearTimeout(joinTimeoutId); joinTimeoutId=null; }
+  netPeer=new Peer(undefined, PEER_ICE_CONFIG);
+  // กันเคสที่ signaling เปิดได้ แต่ data channel ตกลงกันไม่สำเร็จแบบเงียบๆ (ไม่ยิง error เลย) —
+  // ถ้าผ่านไป 20 วิ แล้วยังไม่ 'open' ให้ถือว่าล้มเหลวแล้วแจ้งผู้เล่นแทนที่จะปล่อยให้ค้าง
   joinTimeoutId=setTimeout(()=>{
-    statusEl.textContent='เชื่อมต่อไม่สำเร็จ (หมดเวลา) — มักเกิดเมื่อสองเครื่องอยู่คนละเครือข่าย (เช่น 4G กับ wifi) ลองให้อีกฝ่ายกด "ลองใหม่" สร้างห้องใหม่ แล้วรีบกดเชื่อมต่อทันที หรือให้ทั้งคู่ต่อ wifi เดียวกันแล้วลองอีกครั้ง';
-    btn.disabled=false;
-    if(netPeer){ try{ netPeer.destroy(); }catch(e){} netPeer=null; }
-  }, 15000);
+    if(!NET_MODE){
+      document.getElementById('joinStatusMsg').textContent='เชื่อมต่อไม่สำเร็จ (หมดเวลา) — ตรวจสอบว่ารหัสถูกต้อง เพื่อนยังเปิดห้องค้างอยู่ และเน็ตทั้งสองฝั่งไม่ได้บล็อก WebRTC แล้วลองใหม่';
+      if(netPeer){ try{ netPeer.destroy(); }catch(e){} netPeer=null; }
+    }
+  }, 20000);
   netPeer.on('open', ()=>{
     const c=netPeer.connect(code, {reliable:true});
-    c.on('open', ()=>{ clearJoinTimeout(); btn.disabled=false; wireConn(c,'guest'); });
-    c.on('error', ()=>{ clearJoinTimeout(); btn.disabled=false; statusEl.textContent='เชื่อมต่อไม่สำเร็จ ตรวจสอบรหัสห้องอีกครั้ง แล้วกดเชื่อมต่อใหม่'; });
-    c.on('close', ()=>{ clearJoinTimeout(); btn.disabled=false; });
+    c.on('open', ()=>{ if(joinTimeoutId){ clearTimeout(joinTimeoutId); joinTimeoutId=null; } wireConn(c,'guest'); });
+    c.on('error', ()=>{
+      if(joinTimeoutId){ clearTimeout(joinTimeoutId); joinTimeoutId=null; }
+      document.getElementById('joinStatusMsg').textContent='เชื่อมต่อไม่สำเร็จ ตรวจสอบรหัสห้องอีกครั้ง แล้วกดเชื่อมต่อใหม่';
+    });
   });
   netPeer.on('error', e=>{
-    clearJoinTimeout();
-    btn.disabled=false;
-    if(e.type==='peer-unavailable'){
-      statusEl.textContent='ไม่พบห้องนี้ — ตรวจสอบว่ารหัสถูกต้อง และเพื่อนยังเปิดหน้าห้องค้างอยู่ (ยังไม่ปิดแท็บ) แล้วลองใหม่';
-    } else {
-      statusEl.textContent='เชื่อมต่อไม่สำเร็จ ('+e.type+') — เซิร์ฟเวอร์จับคู่ (PeerJS) เข้าไม่ถึง ลองเปิดไฟล์นี้นอกหน้าแชท (ดาวน์โหลดแล้วเปิดด้วย Safari/Chrome จริง) แล้วกดเชื่อมต่อใหม่';
-    }
+    if(joinTimeoutId){ clearTimeout(joinTimeoutId); joinTimeoutId=null; }
+    document.getElementById('joinStatusMsg').textContent='เชื่อมต่อไม่สำเร็จ ('+e.type+') — เซิร์ฟเวอร์จับคู่ (PeerJS) เข้าไม่ถึง ลองเปิดไฟล์นี้นอกหน้าแชท (ดาวน์โหลดแล้วเปิดด้วย Safari/Chrome จริง) แล้วกดเชื่อมต่อใหม่';
   });
 });
 
