@@ -6,7 +6,21 @@
 <title>Project Eden Tactics — Prototype</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.5/peerjs.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBKhbsAb7IsDrdWqGyl1VRcKdJ5OsAR8g8",
+    authDomain: "edentactics-b2147.firebaseapp.com",
+    databaseURL: "https://edentactics-b2147-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "edentactics-b2147",
+    storageBucket: "edentactics-b2147.firebasestorage.app",
+    messagingSenderId: "1999660859",
+    appId: "1:1999660859:web:2590c26181af6b1649b91e",
+    measurementId: "G-XLS1PB4ZQG"
+  };
+  firebase.initializeApp(firebaseConfig);
+</script>
 <style>
   :root{
     /* ---------- Cozy Fantasy · Wooden journal palette (from Project Eden) ---------- */
@@ -662,21 +676,41 @@ function log(msg){
 ================================================================= */
 let NET_MODE=false, netRole=null, netPeer=null, netConn=null, applyingRemote=false;
 let myNetPick=null, opponentNetPick=null;
-let joinTimeoutId=null;
 
-/* PeerJS ค่าเริ่มต้นมีแค่ STUN เฉยๆ ถ้าฝั่งใดฝั่งหนึ่งอยู่หลัง NAT ที่เข้มงวด (มือถือ/เน็ตบ้านบางเจ้า)
-   การเชื่อมต่อ WebRTC ตรงๆ จะเงียบๆ ไม่สำเร็จ ไม่มี error ให้เห็นเลย — กด join แล้วค้างเฉยๆ
-   เพิ่ม TURN relay (public test relay จาก openrelay.metered.ca) เป็นทางสำรองให้ traffic วิ่งผ่านได้เสมอ */
-const PEER_ICE_CONFIG={
-  config:{
-    iceServers:[
-      {urls:'stun:stun.l.google.com:19302'},
-      {urls:'turn:openrelay.metered.ca:80', username:'openrelayproject', credential:'openrelayproject'},
-      {urls:'turn:openrelay.metered.ca:443', username:'openrelayproject', credential:'openrelayproject'},
-      {urls:'turn:openrelay.metered.ca:443?transport=tcp', username:'openrelayproject', credential:'openrelayproject'}
-    ]
+/* ---------------- Firebase-based WebRTC signaling (แทน PeerJS) ---------------- */
+const fbDb = firebase.database();
+const ICE_SERVERS = { iceServers:[
+  { urls:'stun:stun.l.google.com:19302' },
+  { urls:'stun:stun1.l.google.com:19302' }
+]};
+let rtcPC=null, fbRoomRef=null, fbListeners=[];
+
+function genRoomCode(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s=''; for(let i=0;i<5;i++) s+=chars[Math.floor(Math.random()*chars.length)];
+  return s;
+}
+// wrapper ให้หน้าตาเหมือน PeerJS DataConnection (.open, .send(), .on('open'|'data'|'close'|'error'))
+class SimpleConn{
+  constructor(){ this.open=false; this._h={open:[],data:[],close:[],error:[]}; this.dc=null; }
+  on(ev,cb){ (this._h[ev]=this._h[ev]||[]).push(cb); }
+  _emit(ev,arg){ (this._h[ev]||[]).forEach(cb=>{ try{ cb(arg); }catch(e){ console.error(e); } }); }
+  send(data){ if(this.dc && this.dc.readyState==='open') this.dc.send(data); }
+  bindChannel(dc){
+    this.dc=dc;
+    dc.onopen=()=>{ this.open=true; this._emit('open'); };
+    dc.onmessage=(e)=>this._emit('data', e.data);
+    dc.onclose=()=>{ this.open=false; this._emit('close'); };
+    dc.onerror=(e)=>this._emit('error', e);
   }
-};
+}
+function fbListen(ref, event, cb){ ref.on(event, cb); fbListeners.push({ref,event,cb}); }
+function cleanupNet(){
+  fbListeners.forEach(({ref,event,cb})=>{ try{ ref.off(event,cb); }catch(e){} });
+  fbListeners=[];
+  if(fbRoomRef){ try{ fbRoomRef.child('offer').remove(); fbRoomRef.child('answer').remove(); }catch(e){} fbRoomRef=null; }
+  if(rtcPC){ try{ rtcPC.close(); }catch(e){} rtcPC=null; }
+}
 
 function sendNet(msg){ if(netConn && netConn.open) netConn.send(JSON.stringify(msg)); }
 
@@ -738,13 +772,33 @@ document.getElementById('btnPlayAI').addEventListener('click',()=>{
 function startHostPeer(){
   document.getElementById('roomCodeDisplay').textContent='กำลังสร้างห้อง...';
   document.getElementById('btnRetryHost').style.display='none';
-  if(netPeer){ try{ netPeer.destroy(); }catch(e){} netPeer=null; }
-  netPeer=new Peer(undefined, PEER_ICE_CONFIG);
-  netPeer.on('open', id=>{ document.getElementById('roomCodeDisplay').textContent=id; });
-  netPeer.on('connection', c=>{ wireConn(c,'host'); });
-  netPeer.on('error', e=>{
-    document.getElementById('roomCodeDisplay').textContent='เชื่อมต่อไม่สำเร็จ ('+e.type+') — เซิร์ฟเวอร์จับคู่ (PeerJS) เข้าไม่ถึง ลองเปิดไฟล์นี้นอกหน้าแชท (ดาวน์โหลดแล้วเปิดด้วย Safari/Chrome จริง) แล้วกด "ลองใหม่"';
+  cleanupNet();
+  netPeer=true; // ใช้เป็นแฟล็กว่ากำลัง/เคย host แล้ว (กันกดซ้ำ)
+  const code=genRoomCode();
+  const conn=new SimpleConn();
+  wireConn(conn,'host');
+  rtcPC=new RTCPeerConnection(ICE_SERVERS);
+  const dc=rtcPC.createDataChannel('game');
+  conn.bindChannel(dc);
+  fbRoomRef=fbDb.ref('rooms/'+code);
+  rtcPC.onicecandidate=(e)=>{ if(e.candidate) fbRoomRef.child('hostCandidates').push(e.candidate.toJSON()); };
+  rtcPC.createOffer().then(offer=>rtcPC.setLocalDescription(offer)).then(()=>{
+    return fbRoomRef.child('offer').set({sdp:rtcPC.localDescription.sdp, type:rtcPC.localDescription.type});
+  }).then(()=>{
+    document.getElementById('roomCodeDisplay').textContent=code;
+  }).catch(e=>{
+    document.getElementById('roomCodeDisplay').textContent='สร้างห้องไม่สำเร็จ: '+e.message+' — ตรวจสอบ Firebase Realtime Database rules';
     document.getElementById('btnRetryHost').style.display='inline-block';
+  });
+  fbListen(fbRoomRef.child('answer'), 'value', snap=>{
+    const val=snap.val();
+    if(val && rtcPC && !rtcPC.currentRemoteDescription){
+      rtcPC.setRemoteDescription(new RTCSessionDescription(val)).catch(()=>{});
+    }
+  });
+  fbListen(fbRoomRef.child('guestCandidates'), 'child_added', snap=>{
+    const c=snap.val();
+    if(c && rtcPC) rtcPC.addIceCandidate(new RTCIceCandidate(c)).catch(()=>{});
   });
 }
 document.getElementById('btnShowHost').addEventListener('click',()=>{
@@ -763,44 +817,27 @@ document.getElementById('btnCopyCode').addEventListener('click',()=>{
   navigator.clipboard && navigator.clipboard.writeText(txt).catch(()=>{});
 });
 document.getElementById('btnJoinConnect').addEventListener('click',()=>{
-  const code=document.getElementById('joinCodeInput').value.trim();
+  const code=document.getElementById('joinCodeInput').value.trim().toUpperCase();
   if(!code) return;
-  document.getElementById('joinStatusMsg').textContent='กำลังต่อกับเซิร์ฟเวอร์จับคู่...';
-  if(netPeer){ try{ netPeer.destroy(); }catch(e){} netPeer=null; }
-  if(joinTimeoutId){ clearTimeout(joinTimeoutId); joinTimeoutId=null; }
-  netPeer=new Peer(undefined, PEER_ICE_CONFIG);
-  // กันเคสที่ signaling เปิดได้ แต่ data channel ตกลงกันไม่สำเร็จแบบเงียบๆ (ไม่ยิง error เลย) —
-  // ถ้าผ่านไป 35 วิ แล้วยังไม่ 'open' ให้ถือว่าล้มเหลวแล้วแจ้งผู้เล่นแทนที่จะปล่อยให้ค้าง
-  joinTimeoutId=setTimeout(()=>{
-    if(!NET_MODE){
-      document.getElementById('joinStatusMsg').textContent='เชื่อมต่อไม่สำเร็จ (หมดเวลา ที่ขั้น: '+(window._joinStage||'ยังไม่ต่อกับเซิร์ฟเวอร์จับคู่เลย')+') — ตรวจสอบว่ารหัสถูกต้อง เพื่อนยังเปิดห้องค้างอยู่ (ไม่ได้รีเฟรชหน้าจนรหัสเปลี่ยน) และเน็ตทั้งสองฝั่งไม่ได้บล็อก WebRTC แล้วลองใหม่';
-      if(netPeer){ try{ netPeer.destroy(); }catch(e){} netPeer=null; }
-    }
-  }, 35000);
-  netPeer.on('open', myid=>{
-    window._joinStage='พบเซิร์ฟเวอร์จับคู่แล้ว กำลังขอเชื่อมต่อกับเพื่อน...';
-    document.getElementById('joinStatusMsg').textContent=window._joinStage;
-    const c=netPeer.connect(code, {reliable:true});
-    // แสดงสถานะการเจรจา ICE/TURN แบบสด ๆ ช่วยดูว่าติดตรงขั้นไหนถ้ายังไม่สำเร็จ
-    setTimeout(()=>{
-      if(c.peerConnection){
-        c.peerConnection.addEventListener('iceconnectionstatechange', ()=>{
-          const st=c.peerConnection.iceConnectionState;
-          window._joinStage='กำลังเจรจา WebRTC (สถานะ ICE: '+st+')';
-          if(!NET_MODE) document.getElementById('joinStatusMsg').textContent=window._joinStage;
-        });
-      }
-    }, 300);
-    c.on('open', ()=>{ if(joinTimeoutId){ clearTimeout(joinTimeoutId); joinTimeoutId=null; } wireConn(c,'guest'); });
-    c.on('error', ()=>{
-      if(joinTimeoutId){ clearTimeout(joinTimeoutId); joinTimeoutId=null; }
-      document.getElementById('joinStatusMsg').textContent='เชื่อมต่อไม่สำเร็จ ตรวจสอบรหัสห้องอีกครั้ง แล้วกดเชื่อมต่อใหม่';
-    });
+  document.getElementById('joinStatusMsg').textContent='กำลังเชื่อมต่อ...';
+  cleanupNet();
+  const conn=new SimpleConn();
+  rtcPC=new RTCPeerConnection(ICE_SERVERS);
+  rtcPC.ondatachannel=(e)=>{ conn.bindChannel(e.channel); wireConn(conn,'guest'); };
+  fbRoomRef=fbDb.ref('rooms/'+code);
+  rtcPC.onicecandidate=(e)=>{ if(e.candidate) fbRoomRef.child('guestCandidates').push(e.candidate.toJSON()); };
+  fbRoomRef.child('offer').get().then(snap=>{
+    const offer=snap.val();
+    if(!offer){ throw new Error('ไม่พบห้องนี้ ตรวจสอบรหัสห้องอีกครั้ง'); }
+    return rtcPC.setRemoteDescription(new RTCSessionDescription(offer));
+  }).then(()=>rtcPC.createAnswer()).then(answer=>rtcPC.setLocalDescription(answer)).then(()=>{
+    return fbRoomRef.child('answer').set({sdp:rtcPC.localDescription.sdp, type:rtcPC.localDescription.type});
+  }).catch(e=>{
+    document.getElementById('joinStatusMsg').textContent='เชื่อมต่อไม่สำเร็จ: '+e.message;
   });
-  netPeer.on('error', e=>{
-    window._joinStage='เซิร์ฟเวอร์จับคู่ error: '+e.type;
-    if(joinTimeoutId){ clearTimeout(joinTimeoutId); joinTimeoutId=null; }
-    document.getElementById('joinStatusMsg').textContent='เชื่อมต่อไม่สำเร็จ ('+e.type+') — เซิร์ฟเวอร์จับคู่ (PeerJS) เข้าไม่ถึง ลองเปิดไฟล์นี้นอกหน้าแชท (ดาวน์โหลดแล้วเปิดด้วย Safari/Chrome จริง) แล้วกดเชื่อมต่อใหม่';
+  fbListen(fbRoomRef.child('hostCandidates'), 'child_added', snap=>{
+    const c=snap.val();
+    if(c && rtcPC) rtcPC.addIceCandidate(new RTCIceCandidate(c)).catch(()=>{});
   });
 });
 
