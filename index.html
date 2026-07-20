@@ -765,20 +765,32 @@ document.getElementById('btnCopyCode').addEventListener('click',()=>{
 document.getElementById('btnJoinConnect').addEventListener('click',()=>{
   const code=document.getElementById('joinCodeInput').value.trim();
   if(!code) return;
-  document.getElementById('joinStatusMsg').textContent='กำลังเชื่อมต่อ...';
+  document.getElementById('joinStatusMsg').textContent='กำลังต่อกับเซิร์ฟเวอร์จับคู่...';
   if(netPeer){ try{ netPeer.destroy(); }catch(e){} netPeer=null; }
   if(joinTimeoutId){ clearTimeout(joinTimeoutId); joinTimeoutId=null; }
   netPeer=new Peer(undefined, PEER_ICE_CONFIG);
   // กันเคสที่ signaling เปิดได้ แต่ data channel ตกลงกันไม่สำเร็จแบบเงียบๆ (ไม่ยิง error เลย) —
-  // ถ้าผ่านไป 20 วิ แล้วยังไม่ 'open' ให้ถือว่าล้มเหลวแล้วแจ้งผู้เล่นแทนที่จะปล่อยให้ค้าง
+  // ถ้าผ่านไป 35 วิ แล้วยังไม่ 'open' ให้ถือว่าล้มเหลวแล้วแจ้งผู้เล่นแทนที่จะปล่อยให้ค้าง
   joinTimeoutId=setTimeout(()=>{
     if(!NET_MODE){
-      document.getElementById('joinStatusMsg').textContent='เชื่อมต่อไม่สำเร็จ (หมดเวลา) — ตรวจสอบว่ารหัสถูกต้อง เพื่อนยังเปิดห้องค้างอยู่ และเน็ตทั้งสองฝั่งไม่ได้บล็อก WebRTC แล้วลองใหม่';
+      document.getElementById('joinStatusMsg').textContent='เชื่อมต่อไม่สำเร็จ (หมดเวลา ที่ขั้น: '+(window._joinStage||'ยังไม่ต่อกับเซิร์ฟเวอร์จับคู่เลย')+') — ตรวจสอบว่ารหัสถูกต้อง เพื่อนยังเปิดห้องค้างอยู่ (ไม่ได้รีเฟรชหน้าจนรหัสเปลี่ยน) และเน็ตทั้งสองฝั่งไม่ได้บล็อก WebRTC แล้วลองใหม่';
       if(netPeer){ try{ netPeer.destroy(); }catch(e){} netPeer=null; }
     }
-  }, 20000);
-  netPeer.on('open', ()=>{
+  }, 35000);
+  netPeer.on('open', myid=>{
+    window._joinStage='พบเซิร์ฟเวอร์จับคู่แล้ว กำลังขอเชื่อมต่อกับเพื่อน...';
+    document.getElementById('joinStatusMsg').textContent=window._joinStage;
     const c=netPeer.connect(code, {reliable:true});
+    // แสดงสถานะการเจรจา ICE/TURN แบบสด ๆ ช่วยดูว่าติดตรงขั้นไหนถ้ายังไม่สำเร็จ
+    setTimeout(()=>{
+      if(c.peerConnection){
+        c.peerConnection.addEventListener('iceconnectionstatechange', ()=>{
+          const st=c.peerConnection.iceConnectionState;
+          window._joinStage='กำลังเจรจา WebRTC (สถานะ ICE: '+st+')';
+          if(!NET_MODE) document.getElementById('joinStatusMsg').textContent=window._joinStage;
+        });
+      }
+    }, 300);
     c.on('open', ()=>{ if(joinTimeoutId){ clearTimeout(joinTimeoutId); joinTimeoutId=null; } wireConn(c,'guest'); });
     c.on('error', ()=>{
       if(joinTimeoutId){ clearTimeout(joinTimeoutId); joinTimeoutId=null; }
@@ -786,6 +798,7 @@ document.getElementById('btnJoinConnect').addEventListener('click',()=>{
     });
   });
   netPeer.on('error', e=>{
+    window._joinStage='เซิร์ฟเวอร์จับคู่ error: '+e.type;
     if(joinTimeoutId){ clearTimeout(joinTimeoutId); joinTimeoutId=null; }
     document.getElementById('joinStatusMsg').textContent='เชื่อมต่อไม่สำเร็จ ('+e.type+') — เซิร์ฟเวอร์จับคู่ (PeerJS) เข้าไม่ถึง ลองเปิดไฟล์นี้นอกหน้าแชท (ดาวน์โหลดแล้วเปิดด้วย Safari/Chrome จริง) แล้วกดเชื่อมต่อใหม่';
   });
