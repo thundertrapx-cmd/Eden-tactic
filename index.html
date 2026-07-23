@@ -194,6 +194,15 @@
   #evoChoose.show{ display:flex; }
   #evoChoose .lead{ font-size:12px; color:var(--parchment-2); max-width:520px; text-align:center; line-height:1.6; }
   #evoGrid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,280px)); gap:12px; justify-content:center; width:100%; max-width:620px; }
+  /* ---------- how-to / tutorial ---------- */
+  #howto{ position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; padding:18px; background:rgba(10,7,4,0.9); }
+  #howto.show{ display:flex; }
+  #howtoBox{ background-image:linear-gradient(160deg,var(--parchment),var(--parchment-2)); color:var(--ink); border-radius:12px;
+    padding:16px 20px; max-width:560px; width:100%; max-height:86vh; overflow-y:auto; border:1.5px solid rgba(62,38,23,0.6); box-shadow:0 10px 30px rgba(0,0,0,0.55); }
+  #howtoBox h2{ font-family:'Press Start 2P','Kanit',monospace; font-size:14px; color:var(--gold-dark); margin:0 0 8px; }
+  #howtoBox h3{ font-size:12.5px; color:var(--sage-dark); margin:12px 0 3px; }
+  #howtoBox p{ font-size:12px; line-height:1.6; margin:2px 0; }
+  #howtoBox .cycle{ font-size:16px; text-align:center; padding:8px; background:rgba(0,0,0,0.06); border-radius:8px; margin:6px 0; letter-spacing:1px; }
   /* ---------- impact fx: hit flash + screen shake ---------- */
   @keyframes hitFlash{
     0%{ filter:brightness(2.4) saturate(0.3) drop-shadow(0 0 6px #fff); transform:scale(1.12); }
@@ -265,6 +274,7 @@
       <button class="actionBtn secondary" id="discardStrikeBtn" disabled title="ทิ้งการ์ดใบไหนก็ได้ 1 ใบ เพื่อโจมตีพื้นฐาน (ดาเมจคงที่ ระยะ+1)">🗑️⚔️ ทิ้งการ์ดโจมตี</button>
       <button class="actionBtn" id="endTurnBtn">จบเทิร์น</button>
       <button class="actionBtn secondary" id="cancelBtn">ยกเลิกการเลือก</button>
+      <button class="actionBtn secondary" id="helpBtn" title="วิธีเล่น">❓ วิธีเล่น</button>
       <button class="actionBtn secondary" id="restartBtn">เลือก Leader ใหม่</button>
     </div>
   </div>
@@ -319,7 +329,30 @@
   <div id="evoGrid"></div>
   <button class="actionBtn secondary" id="evoCancelBtn">ยกเลิก (เก็บเงื่อนไขไว้ก่อน)</button>
 </div>
-<div id="overlay"><div class="msg" id="overlayMsg"></div><button class="actionBtn" onclick="location.reload()">เล่นอีกครั้ง</button></div>
+<div id="howto"><div id="howtoBox">
+  <h2>วิธีเล่น</h2>
+  <p><b>🎯 เป้าหมาย:</b> กำจัด Leader 👑 ของศัตรู (หรือล้มบีสต์ทุกตัว)</p>
+  <h3>⚡ พลังงาน</h3>
+  <p>เริ่ม 3 เพิ่ม 1 ทุกเทิร์น (สูงสุด 10) ใช้ลงบีสต์และร่ายการ์ด</p>
+  <h3>🐾 เดิน & โจมตี</h3>
+  <p>คลิกบีสต์ของคุณ → ช่อง<span style="color:#5f8f98">ฟ้า</span>เดินฟรี · ช่อง<span style="color:#a1602f">ส้ม</span>ต้องทิ้งการ์ด 1 ใบเพื่อเดินต่อ · ช่อง<span style="color:#a8636f">แดง</span>คือโจมตี — ถ้าการ์ดในมือใช้ไม่ได้เลย กด "ทิ้งการ์ดโจมตี" ได้</p>
+  <h3>🔮 ธาตุ & แพ้ทาง</h3>
+  <div class="cycle">🔥 → 🌿 → ⚡ → 💧 → 🔥 &nbsp; | &nbsp; 🌑 ↔ ☀️</div>
+  <p>ไล่กินกันเป็นวง — ได้เปรียบ ×1.25 เสียเปรียบ ×0.8 · กลไกแต่ละธาตุ: 🔥ไฟลาม · 🌿พิษ · ⚡สายฟ้าลามใส่ตัวข้างๆ · 💧ฟื้น HP · 🌑สละเลือดแลกดาเมจ · ☀️ได้โล่ทุกเทิร์น</p>
+  <h3>🌟 วิวัฒนาการ (Ascend)</h3>
+  <p>ครบเงื่อนไขแล้วเลือกบีสต์ กด Ascend — บางตัวแตกได้ 2 สาย เลือกเองว่าจะโตไปทางไหน (บางสายเปลี่ยนธาตุไปเลย)</p>
+  <h3>✨ Ultimate</h3>
+  <p>ชาร์จด้วยทรัพยากรประจำสาย เต็มเมื่อไหร่กดใช้ได้ทันที</p>
+  <h3>⏳ Sudden Death</h3>
+  <p>หลังเทิร์นที่ 14 ทุกตัวเริ่มเสีย HP เพิ่มขึ้นเรื่อยๆ ทะลุเกราะ — รีบจบเกม อย่าตั้งรับเฉยๆ</p>
+  <button class="actionBtn" id="howtoCloseBtn" style="margin-top:14px;">เข้าใจแล้ว ▶</button>
+</div></div>
+<div id="overlay"><div class="msg" id="overlayMsg"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+    <button class="actionBtn" id="rematchBtn" style="display:none;">🔁 รีแมตช์</button>
+    <button class="actionBtn" onclick="location.reload()">เล่นอีกครั้ง</button>
+  </div>
+</div>
 <script>
 /* ============================================================
    PROJECT EDEN TACTICS — prototype v2
@@ -352,6 +385,11 @@ const DECK_SIZE=30, HAND_SIZE=5;
 ------------------------------------------------------------------------ */
 const BASIC_STRIKE_DMG = 20;
 const DISCARD_STRIKE_RANGE_BONUS = 1;
+/* ---------------- Sudden Death (กันเกมยืด) ----------------
+   หลังเทิร์นที่ SUDDEN_DEATH_TURN ต้นเทิร์นของแต่ละฝ่ายทุกตัวจะโดนดาเมจจริง
+   ที่เพิ่มขึ้นเรื่อยๆ (ทะลุเกราะ/โล่/ธาตุ) บังคับให้เกมจบ ไม่วนตั้งรับไม่รู้จบ */
+const SUDDEN_DEATH_TURN = 14;
+const SUDDEN_DEATH_STEP = 6;
 /* ---------------- Beasts ----------------
    ascendTo: string | array — ถ้าเป็น array คือ "แตกสายวิวัฒน์" ให้ผู้เล่นเลือก
    element: ถ้าใส่ไว้ = override ธาตุประจำตัว (ใช้กับร่างวิวัฒน์ที่เปลี่ยนธาตุ)
@@ -368,7 +406,7 @@ const BEASTS = {
   wolfalpha:{id:'wolfalpha', name:'Alpha Wolf', icon:'🐺', species:'wolf', role:'Pack · จ่าฝูง', hp:260, atk:45, move:2, range:1,
             passive:'สัญชาตญาณจ่าฝูง: ATK+15 ถ้ามีหมาป่าอีกตัวในสนาม · ถ้า Pack Count ≥4 โจมตีพื้นฐานกระจายดาเมจ 50% รอบเป้าหมาย', key:'alphapack',
             stage:2, ascendTo:null},
-  hellhound:{id:'hellhound', name:'Hell Hound', icon:'😈', species:'wolf', element:'dark', role:'Berserk · ล่าเดี่ยว', hp:230, atk:55, move:3, range:1,
+  hellhound:{id:'hellhound', name:'Hell Hound', icon:'😈', species:'wolf', element:'dark', role:'Berserk · ล่าเดี่ยว', hp:220, atk:48, move:3, range:1,
             passive:'ทิ้งสัญชาตญาณฝูงแลกพลังนรก — ธาตุกลายเป็น 🌑 Dark (โจมตีสละ HP แลกดาเมจ) · Move 3 ดุดัน', key:'none',
             stage:2, ascendTo:null},
   /* --- Bear line ☀️ --- */
@@ -446,6 +484,29 @@ const ELEMENTS = {
 const SPECIES_ELEMENT = { wolf:'fire', bear:'light', bird:'lightning', dragon:'dark', rabbit:'nature', turtle:'water' };
 /* ธาตุของหน่วย: ใช้ override ราย unit ถ้ามี (ตั้งตอนวิวัฒน์เปลี่ยนธาตุ) ไม่งั้น fallback ตาม species */
 function elementOf(u){ return (u && u.element) || SPECIES_ELEMENT[u.species] || null; }
+/* ---------------- Type advantage (แพ้ทางธาตุ) ----------------
+   วงจร 4 ธาตุ: 🔥 → 🌿 → ⚡ → 💧 → 🔥 (ไล่กินกันเป็นวง)
+   คู่อริ: 🌑 ↔ ☀️ (Dark/Light ปะทะกันแรงทั้งคู่)
+   ผู้โจมตีได้เปรียบ = ดาเมจ ×1.25 · เสียเปรียบ = ×0.8
+   ใช้กับดาเมจ "ที่มีผู้โจมตี" ทุกชนิด (โจมตีพื้นฐาน + สกิลที่มี attacker)
+------------------------------------------------------------------- */
+const ELEMENT_ADV = { fire:'nature', nature:'lightning', lightning:'water', water:'fire', light:'dark', dark:'light' };
+function typeMultiplier(atkEl, defEl){
+  if(!atkEl||!defEl) return 1;
+  if(ELEMENT_ADV[atkEl]===defEl) return 1.25;   // ผู้โจมตีข่มธาตุเป้าหมาย
+  if(ELEMENT_ADV[defEl]===atkEl) return 0.8;    // ผู้โจมตีถูกธาตุเป้าหมายข่ม
+  return 1;
+}
+function elemMatchupText(el){
+  if(!el) return '';
+  const strong=ELEMENT_ADV[el];
+  const weak=Object.keys(ELEMENT_ADV).find(k=>ELEMENT_ADV[k]===el);
+  if(strong && strong===weak) return `ปะทะ ${ELEMENTS[strong].icon} แรงทั้งคู่ (×1.25)`;
+  const parts=[];
+  if(strong) parts.push(`ข่ม ${ELEMENTS[strong].icon} (×1.25)`);
+  if(weak) parts.push(`แพ้ ${ELEMENTS[weak].icon} (×0.8)`);
+  return parts.join(' · ');
+}
 /* เรียกจาก doBasicStrike และ discardCardForBasic เท่านั้น (เฉพาะโจมตีพื้นฐาน ไม่ใช่การ์ดสกิล) */
 function applyElementalRider(attacker, target){
   const el=elementOf(attacker);
@@ -460,10 +521,11 @@ function applyElementalRider(attacker, target){
     // Storm Phoenix สาดสายฟ้าแรงขึ้น (60% ของ ATK แทน 40%)
     const ratio = attacker.tplId==='stormphoenix' ? 0.6 : 0.4;
     const chained=enemiesOf(attacker.owner).find(e=>e.uid!==target.uid && e.hp>0 && dist(e,target)===1);
-    if(chained){ const bonus=Math.floor(attackAtkOf(attacker)*ratio); dealDamage(chained, bonus, {attacker}); log(`⚡ กระแสไฟฟ้าสาดจาก ${target.name} ใส่ ${chained.name} เพิ่ม ${bonus}!`); }
+    if(chained){ const bonus=Math.floor(attackAtkOf(attacker)*ratio); dealDamage(chained, bonus, {attacker, noTypeAdv:true}); log(`⚡ กระแสไฟฟ้าสาดจาก ${target.name} ใส่ ${chained.name} เพิ่ม ${bonus}!`); }
   } else if(el==='dark'){
-    const cost=8, bonus=15;
-    if(attacker.hp>cost){ attacker.hp-=cost; dealDamage(target, bonus, {attacker}); log(`🌑 ${attacker.name} สละ HP ${cost} แลกดาเมจเสริม ${bonus}!`); }
+    // Sacrifice: จ่าย 10% ของ HP ปัจจุบัน (ขั้นต่ำ 5) แลกดาเมจเสริม — ตัวเลือดมากเสี่ยงมากกว่าเดิม
+    const cost=Math.max(5, Math.floor(attacker.hp*0.1)), bonus=15;
+    if(attacker.hp>cost){ attacker.hp-=cost; dealDamage(target, bonus, {attacker, noTypeAdv:true}); log(`🌑 ${attacker.name} สละ HP ${cost} แลกดาเมจเสริม ${bonus}!`); }
   } else if(el==='water'){
     const heal=12, before=attacker.hp;
     attacker.hp=Math.min(attacker.maxHp, attacker.hp+heal);
@@ -610,6 +672,7 @@ function newBeastUnit(tpl, owner, x, y, isLeader){
 }
 const state = {
   turn:'player',
+  round:0,
   leaderKey:{player:null, enemy:null},
   charge:{player:0, enemy:0},
   bulwarkPool:{player:0, enemy:0},
@@ -770,6 +833,13 @@ function applyIncomingState(remote){
   document.getElementById('deckBuilder').classList.remove('show');
   document.getElementById('netWaitOverlay').classList.remove('show');
   render();
+  // ฝั่งที่รับ state มา ก็ต้องเห็นผลจบเกม (เดิมมีแต่ฝั่งที่ก่อดาเมจเห็น overlay)
+  if(state.over){
+    const iWin = !leaderOf('enemy') || aliveUnits('enemy').length===0;
+    document.getElementById('overlayMsg').textContent = iWin ? 'YOU WIN!' : 'YOU LOSE...';
+    document.getElementById('overlay').classList.add('show');
+    document.getElementById('rematchBtn').style.display = NET_MODE ? 'inline-block' : 'none';
+  }
   applyingRemote=false;
 }
 function maybeStartNetGame(){
@@ -782,6 +852,7 @@ function handleNetMessage(raw){
   let msg; try{ msg=JSON.parse(raw); }catch(e){ return; }
   if(msg.type==='state'){ applyIncomingState(msg.state); }
   else if(msg.type==='pick'){ opponentNetPick=msg.pick; maybeStartNetGame(); }
+  else if(msg.type==='rematch'){ netRematch(true); }
 }
 function wireConn(c, role){
   netConn=c; netRole=role;
@@ -910,7 +981,7 @@ function renderLeaderSelect(){
       <div class="lname">${L.title}</div>
       <div class="lrole">${b.role}</div>
       <div class="ltag">“${L.tagline}”</div>
-      <div class="lline"><b>${ELEMENTS[SPECIES_ELEMENT[key]].icon} ${ELEMENTS[SPECIES_ELEMENT[key]].name}</b> ${ELEMENTS[SPECIES_ELEMENT[key]].mechanic} — ${key==='bear'?'ทริกเกอร์อัตโนมัติทุกต้นเทิร์น':'ทริกเกอร์อัตโนมัติทุกครั้งที่โจมตีพื้นฐาน'}</div>
+      <div class="lline"><b>${ELEMENTS[SPECIES_ELEMENT[key]].icon} ${ELEMENTS[SPECIES_ELEMENT[key]].name}</b> ${ELEMENTS[SPECIES_ELEMENT[key]].mechanic} · <span style="color:var(--clay-dark)">${elemMatchupText(SPECIES_ELEMENT[key])}</span></div>
       <div class="lline"><b>Passive</b> ${b.passive}</div>
       <div class="lline"><b>${L.resource.name}</b> ${L.resource.desc}</div>
       <div class="lline"><b>Ultimate · ${L.ultimate.name}</b> ${L.ultimate.desc}</div>
@@ -934,7 +1005,7 @@ function startGame(leaderKey, customCounts, forcedEnemyKey, forcedEnemyCounts){
   state.energy={player:3, enemy:3};
   state.charge={player:0, enemy:0};
   state.bulwarkPool={player:0, enemy:0};
-  state.turn='player'; state.over=false;
+  state.turn='player'; state.over=false; state.round=0;
   state.everDeployed={player:true, enemy:true};
   state.enemyDeployCooldown=1;
   document.getElementById('log').innerHTML='';
@@ -945,6 +1016,7 @@ function startGame(leaderKey, customCounts, forcedEnemyKey, forcedEnemyCounts){
   log(`เด็คของคุณ: ${LEADERS[leaderKey].title} — การ์ดสาย ${SPECIES_NAME[leaderKey]} เท่านั้น + การ์ดกลาง`);
   log(`คู่ต่อสู้: ${LEADERS[enemyKey].title}`);
   render();
+  if(!introShown){ introShown=true; showHowto(); } // โชว์วิธีเล่นครั้งแรกที่เริ่มเกม
 }
 /* ---------------- Deck Builder screen ---------------- */
 let draftLeaderKey=null, draftCounts={};
@@ -1047,6 +1119,12 @@ function chargeInfo(owner){
 function dealDamage(target, amount, opts={}){
   if(target.hp<=0) return;
   if(target.passiveKey==='evade' && !opts.trueHit && Math.random()<0.3){ log(`${target.name} หลบการโจมตี!`); return; }
+  // แพ้ทางธาตุ: ปรับดาเมจตามความสัมพันธ์ธาตุผู้โจมตี↔เป้าหมาย
+  if(opts.attacker && !opts.noTypeAdv){
+    const m=typeMultiplier(elementOf(opts.attacker), elementOf(target));
+    if(m>1){ amount=Math.round(amount*m); log(`🔺 ${ELEMENTS[elementOf(opts.attacker)].icon} ข่ม ${ELEMENTS[elementOf(target)].icon} — ดาเมจ ×${m}`); }
+    else if(m<1){ amount=Math.round(amount*m); log(`🔻 ${ELEMENTS[elementOf(opts.attacker)].icon} แพ้ทาง ${ELEMENTS[elementOf(target)].icon} — ดาเมจ ×${m}`); }
+  }
   let dmg=amount;
   if(target.passiveKey==='shell') dmg=Math.max(1,dmg-15);
   if(target.shield>0) dmg=Math.max(1,dmg-target.shield);
@@ -1215,6 +1293,7 @@ function endGame(winner){
   state.over=true;
   document.getElementById('overlay').classList.add('show');
   document.getElementById('overlayMsg').textContent = winner==='player' ? 'YOU WIN!' : 'YOU LOSE...';
+  document.getElementById('rematchBtn').style.display = NET_MODE ? 'inline-block' : 'none';
   log(winner==='player' ? '🏆 คุณชนะ!' : '☠️ คุณแพ้...');
 }
 /* ---------------- Card legality ---------------- */
@@ -1355,6 +1434,7 @@ function showInfo(u){
   const dotLine = u.dotTurns>0 ? `<br><i>${u.dotKind==='burn'?'🔥 ติดไฟ':'🌿 ติดพิษ'} ${u.dotDmgPerTurn}/เทิร์น อีก ${u.dotTurns} เทิร์น</i>` : '';
   p.innerHTML=`<b>${u.icon} ${u.name}${u.isLeader?' 👑':''}</b><br>
     <i>${SPECIES_NAME[u.species]} · ${el.icon} ${el.name} (${el.mechanic})</i> · ${BEASTS[u.tplId].role}<br>
+    <i>⚔️ ${elemMatchupText(elementOf(u))}</i><br>
     HP ${u.hp}/${u.maxHp} · ATK ${attackAtkOf(u)}<br>
     Move ${u.freeMove||0} ฟรี${advSteps>0?` (+${advSteps} ต้องทิ้งการ์ด)`:''} · Range ${u.range}<br><i>${u.passiveText}</i>${ascendLine}${dotLine}`;
   p.classList.add('show');
@@ -1514,7 +1594,7 @@ function resolveCard(idx, ctx, owner='player'){
   const {caster, target, tile}=ctx;
   if(card.summon && tile){ state.units.push(newBeastUnit(card.summon,owner,tile.x,tile.y,false)); log(`${owner==='player'?'🐕 Pack Call':'ศัตรูเรียกฝูง'} — ${BEASTS[card.summon].name} เข้าร่วม!`); }
   if(card.trapDmg && tile){ state.traps.push({x:tile.x,y:tile.y,owner,dmg:card.trapDmg}); log(owner==='player'?'วางกับดักแล้ว':'ศัตรูวางกับดัก'); }
-  if(card.dmg && target){ dealDamage(target, card.dmg, {attacker:caster}); }
+  if(card.dmg && target){ dealDamage(target, card.dmg, {attacker:caster}); if(caster) applyElementalRider(caster, target); /* สกิลโจมตีก็ติดธาตุของผู้ใช้ ทำให้สายที่พึ่งสกิล (Bird/Dragon) ได้ใช้เอกลักษณ์ธาตุด้วย */ }
   if(card.aoeAdj && target){ enemiesOf(owner).filter(u=>u.uid!==target.uid&&dist(u,target)===1).forEach(u=>dealDamage(u,card.aoeAdj)); }
   if(card.aoeSelfAdj && caster){ enemiesOf(owner).filter(u=>dist(u,caster)===1).forEach(u=>dealDamage(u,card.aoeSelfAdj,{attacker:caster})); }
   if(card.aoeDmg && caster){ enemiesOf(owner).filter(u=>dist(u,caster)<=card.aoeRange).forEach(u=>dealDamage(u,card.aoeDmg,{attacker:caster})); }
@@ -1581,6 +1661,30 @@ function fireUltimate(target, owner='player'){
   if(owner==='player'){ state.selection=null; setHint('เลือกการ์ดหรือหน่วยของคุณ'); }
   checkWin(); render();
 }
+/* ---------------- Tutorial (วิธีเล่น) ---------------- */
+let introShown=false;
+function showHowto(){ document.getElementById('howto').classList.add('show'); }
+function hideHowto(){ document.getElementById('howto').classList.remove('show'); }
+document.getElementById('helpBtn').addEventListener('click', showHowto);
+document.getElementById('howtoCloseBtn').addEventListener('click', hideHowto);
+document.getElementById('howto').addEventListener('click',(e)=>{ if(e.target.id==='howto') hideHowto(); });
+
+/* ---------------- P2P rematch (ไม่ต้องรีโหลดหน้า) ----------------
+   คงการเชื่อมต่อ P2P ไว้ ล้าง pick ทั้งสองฝั่ง แล้วกลับไปหน้าเลือก Leader ใหม่
+   ฝ่ายไหนกดก็ได้ อีกฝ่ายจะถูกดึงกลับหน้าเลือก Leader ตาม (ผ่านข้อความ rematch)
+   จากนั้นใช้ flow จัดเด็ค→ส่ง pick เดิม host เริ่มเกมเมื่อได้ pick ครบสองฝั่ง */
+function netRematch(remote){
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('rematchBtn').style.display='none';
+  document.getElementById('netWaitOverlay').classList.remove('show');
+  myNetPick=null; opponentNetPick=null;
+  state.over=true; state.selection=null;
+  if(!remote) sendNet({type:'rematch'});
+  document.getElementById('netStatus').textContent='🟢 เชื่อมต่อแล้ว (P2P) — รีแมตช์: เลือก Leader ใหม่';
+  renderLeaderSelect();
+}
+document.getElementById('rematchBtn').addEventListener('click',()=>netRematch(false));
+
 /* ---------------- Turn flow ---------------- */
 document.getElementById('cancelBtn').addEventListener('click',()=>{ state.selection=null; setHint('เลือกการ์ดหรือหน่วยของคุณ'); render(); });
 document.getElementById('restartBtn').addEventListener('click',()=>{
@@ -1604,6 +1708,7 @@ document.getElementById('discardStrikeBtn').addEventListener('click',()=>{
 });
 function startOfTurn(owner){
   const key=state.leaderKey[owner];
+  if(owner==='player') state.round=(state.round||0)+1; // นับรอบจากต้นเทิร์นผู้เล่น (แชร์ผ่าน state ในโหมด P2P)
   if(key==='wolf') gainCharge(owner, aliveUnits(owner).filter(u=>u.species==='wolf').length); // Pack
   aliveUnits(owner).forEach(u=>{
     u.hasMoved=false; u.hasActed=false; u.atkBuff=0; u.shield=0;
@@ -1626,6 +1731,12 @@ function startOfTurn(owner){
     // Element — Light (Bear/ร่างธาตุแสง): Aegis ได้ Shield 8 แต้มฟรีทุกต้นเทิร์นอัตโนมัติ
     if(u.hp>0 && elementOf(u)==='light'){ u.shield=(u.shield||0)+8; }
   });
+  // Sudden Death: หลังเทิร์นที่กำหนด ทุกตัวของฝ่ายที่ถึงเทิร์นโดนดาเมจจริงเพิ่มขึ้นเรื่อยๆ
+  if((state.round||0)>SUDDEN_DEATH_TURN){
+    const chip=(state.round-SUDDEN_DEATH_TURN)*SUDDEN_DEATH_STEP;
+    log(`⏳ SUDDEN DEATH (เทิร์น ${state.round}) — ทุกตัวของ${owner==='player'?'คุณ':'ศัตรู'}โดน ${chip}`);
+    aliveUnits(owner).slice().forEach(u=>dealDamage(u, chip, {trueHit:true, noTypeAdv:true}));
+  }
   checkWin();
 }
 function endPlayerTurn(){
