@@ -74,6 +74,27 @@
   }
   .tile.zone-player{ background:#31401f; }
   .tile.zone-enemy{ background:#402424; }
+  /* ---------- terrain ---------- */
+  .terr-icon{ position:absolute; top:2px; left:3px; font-size:11px; opacity:0.8; pointer-events:none; }
+  .tile.terr-highground{ background:#4a4030; box-shadow:inset 0 0 0 1px rgba(217,164,65,0.45); }
+  .tile.terr-lava{ background:#4a2418; box-shadow:inset 0 0 0 1px rgba(221,120,60,0.55); }
+  .tile.terr-water{ background:#243a45; box-shadow:inset 0 0 0 1px rgba(95,143,152,0.55); }
+  .tile.terr-bush{ background:#2e3f24; }
+  .tile.terr-shrine{ background:#3a3350; box-shadow:inset 0 0 0 2px rgba(183,155,214,0.65); }
+  /* ---------- generic modal boxes (mulligan / reward / ban) ---------- */
+  .modalWrap{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; padding:16px; flex-direction:column; gap:12px; }
+  .modalWrap.show{ display:flex; }
+  #mulligan{ z-index:46; background:rgba(10,7,4,0.9); }
+  #survivalReward{ z-index:47; background:rgba(10,7,4,0.92); }
+  #banScreen{ z-index:44; background:radial-gradient(circle at 50% 0%, #3a2b1a 0%, #150e08 75%); overflow-y:auto; }
+  .modalBox{ background-image:linear-gradient(160deg,var(--parchment),var(--parchment-2)); color:var(--ink); border-radius:12px;
+    padding:16px 20px; max-width:660px; width:100%; border:1.5px solid rgba(62,38,23,0.6); box-shadow:0 10px 30px rgba(0,0,0,0.55); text-align:center; }
+  .modalBox h2{ font-family:'Press Start 2P','Kanit',monospace; font-size:13px; color:var(--gold-dark); margin:0 0 8px; }
+  .modalBox p{ font-size:12px; line-height:1.5; margin:2px 0; }
+  #mulHand,#rewardGrid{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:10px 0; }
+  #mulCount{ font-size:12px; color:var(--ink-soft); margin-bottom:8px; }
+  .card.reject{ opacity:0.4; }
+  .rewardCard{ cursor:pointer; }
   .tile.hl-move{ box-shadow:inset 0 0 0 2px var(--sky); cursor:pointer; }
   .tile.hl-advance{ box-shadow:inset 0 0 0 2px var(--clay); cursor:pointer; }
   .tile.hl-target{ box-shadow:inset 0 0 0 2px var(--berry-dark); cursor:crosshair; }
@@ -285,7 +306,8 @@
   <h1>PROJECT EDEN TACTICS</h1>
   <div class="lead">เล่นคนเดียวกับ AI หรือเชื่อมต่อกับเพื่อนแบบ P2P (ผ่าน WebRTC) — ฝ่ายหนึ่งกด "สร้างห้อง" แล้วส่งรหัสห้องให้อีกฝ่ายกด "เข้าร่วมห้อง"</div>
   <div id="netChoiceRow">
-    <button class="actionBtn" id="btnPlayAI">🤖 เล่นกับ AI</button>
+    <button class="actionBtn" id="btnPlayAI">🤖 เล่นกับ AI (Quick)</button>
+    <button class="actionBtn" id="btnSurvival">🏔️ Survival Run</button>
     <button class="actionBtn secondary" id="btnShowHost">🌐 สร้างห้อง (Host)</button>
     <button class="actionBtn secondary" id="btnShowJoin">🔗 เข้าร่วมห้อง (Join)</button>
   </div>
@@ -343,8 +365,16 @@
   <p>ครบเงื่อนไขแล้วเลือกบีสต์ กด Ascend — บางตัวแตกได้ 2 สาย เลือกเองว่าจะโตไปทางไหน (บางสายเปลี่ยนธาตุไปเลย)</p>
   <h3>✨ Ultimate</h3>
   <p>ชาร์จด้วยทรัพยากรประจำสาย เต็มเมื่อไหร่กดใช้ได้ทันที</p>
+  <h3>🗺️ ภูมิประเทศ & จุดยึด</h3>
+  <p>🏔️ ที่สูง = ATK×1.25 · 🌋 ลาวา = ยืนแล้วเจ็บ · 💧 น้ำ = ดับไฟ/ล้างพิษ · 🌳 พุ่มไม้ = หลบง่ายขึ้น · ⛲ ศาลเจ้ากลางสนาม = ยึดได้ +พลังงาน/ทรัพยากรทุกเทิร์น</p>
+  <h3>🎯 โอบล้อม & ปฏิกิริยาธาตุ</h3>
+  <p>มีพวกประชิดศัตรู ≥2 ตัว = ตีแรง ×1.25 · 🔥 ใส่เป้าที่ติดพิษ = ระเบิดพิษก้อนใหญ่ · ⚡ ใส่เป้าติดไฟ/พิษ = กระจายสถานะไปตัวข้างๆ</p>
+  <h3>🤐💨 สถานะใหม่</h3>
+  <p>Silence 🤐 = ใช้สกิลไม่ได้ชั่วคราว (Roar) · Knockback 💨 = ผลักกระเด็น (Shell Slam / Wing Storm)</p>
   <h3>⏳ Sudden Death</h3>
   <p>หลังเทิร์นที่ 14 ทุกตัวเริ่มเสีย HP เพิ่มขึ้นเรื่อยๆ ทะลุเกราะ — รีบจบเกม อย่าตั้งรับเฉยๆ</p>
+  <h3>🕹️ โหมดเล่น</h3>
+  <p>Quick = สู้ AI 1 เกม · 🏔️ Survival = สู้ต่อเนื่อง เก็บการ์ดรางวัลหลังชนะแต่ละด่าน · P2P = สู้เพื่อน มีเฟส Ban Leader ก่อนเริ่ม</p>
   <button class="actionBtn" id="howtoCloseBtn" style="margin-top:14px;">เข้าใจแล้ว ▶</button>
 </div></div>
 <div id="overlay"><div class="msg" id="overlayMsg"></div>
@@ -353,6 +383,33 @@
     <button class="actionBtn" onclick="location.reload()">เล่นอีกครั้ง</button>
   </div>
 </div>
+
+<!-- Mulligan: จัดมือเปิด -->
+<div id="mulligan" class="modalWrap"><div class="modalBox">
+  <h2>Mulligan — จัดมือเปิด</h2>
+  <p>คลิกการ์ดที่อยากทิ้งเพื่อจั่วใหม่ (ทำได้ครั้งเดียว) แล้วกดยืนยัน</p>
+  <div id="mulHand"></div>
+  <div id="mulCount"></div>
+  <div style="display:flex;gap:8px;justify-content:center;">
+    <button class="actionBtn secondary" id="mulKeepBtn">เก็บทั้งหมด</button>
+    <button class="actionBtn" id="mulConfirmBtn">ยืนยัน ▶</button>
+  </div>
+</div></div>
+
+<!-- Survival: รางวัลหลังชนะแต่ละด่าน -->
+<div id="survivalReward" class="modalWrap"><div class="modalBox">
+  <h2 id="rewardTitle">ผ่านด่าน! เลือกรางวัล</h2>
+  <p>เลือกการ์ด 1 ใบเพิ่มเข้าเด็คสำหรับด่านต่อไป (ศัตรูจะแข็งขึ้นเรื่อยๆ)</p>
+  <div id="rewardGrid"></div>
+</div></div>
+
+<!-- Draft/Ban (P2P) -->
+<div id="banScreen" class="modalWrap"><div class="modalBox">
+  <h2>Ban Phase</h2>
+  <p>แบน Leader ของคู่แข่ง 1 สาย — สายที่ถูกแบนทั้งสองฝั่งจะเลือกไม่ได้</p>
+  <div id="banGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:10px 0;"></div>
+  <div id="banStatus" style="font-size:12px;color:var(--ink-soft);"></div>
+</div></div>
 <script>
 /* ============================================================
    PROJECT EDEN TACTICS — prototype v2
@@ -507,11 +564,57 @@ function elemMatchupText(el){
   if(weak) parts.push(`แพ้ ${ELEMENTS[weak].icon} (×0.8)`);
   return parts.join(' · ');
 }
-/* เรียกจาก doBasicStrike และ discardCardForBasic เท่านั้น (เฉพาะโจมตีพื้นฐาน ไม่ใช่การ์ดสกิล) */
+/* ---------------- Terrain & Objective (ช่องพิเศษ + จุดยึดกลาง) ----------------
+   เลย์เอาต์สมมาตรตามแกน y เพื่อความยุติธรรมทั้งสองฝั่ง (รวมโหมด P2P ที่กระดานถูกมิเรอร์)
+   highground: ยืนแล้วโจมตีแรงขึ้น · lava: ยืนต้นเทิร์นเจ็บ · water: ดับไฟ/ล้างพิษ
+   bush: หลบง่ายขึ้น · shrine (กลางสนาม): ยึดแล้วได้พลังงาน+ทรัพยากร = จุดชิงพื้นที่ */
+const TERRAIN_TYPES = {
+  highground:{icon:'🏔️', name:'ที่สูง', desc:'ยืนแล้ว ATK ×1.25 ตอนโจมตี'},
+  lava:      {icon:'🌋', name:'ลาวา', desc:'ต้นเทิร์นเสีย 15 HP (ทะลุเกราะ)'},
+  water:     {icon:'💧', name:'น้ำ', desc:'ต้นเทิร์นดับไฟ/ล้างพิษของตัวเอง'},
+  bush:      {icon:'🌳', name:'พุ่มไม้', desc:'หลบการโจมตี +25%'},
+  shrine:    {icon:'⛲', name:'ศาลเจ้า (จุดยึด)', desc:'ยืนต้นเทิร์น: +1 พลังงาน +1 ทรัพยากร'},
+};
+const TERRAIN_LAYOUT = [
+  {x:2,y:2,type:'shrine'},
+  {x:1,y:1,type:'highground'},{x:3,y:1,type:'highground'},{x:1,y:3,type:'highground'},{x:3,y:3,type:'highground'},
+  {x:0,y:2,type:'water'},{x:4,y:2,type:'water'},
+  {x:2,y:1,type:'lava'},{x:2,y:3,type:'lava'},
+  {x:0,y:0,type:'bush'},{x:4,y:0,type:'bush'},{x:0,y:4,type:'bush'},{x:4,y:4,type:'bush'},
+];
+function terrainAt(x,y){ return (state.terrain||[]).find(t=>t.x===x&&t.y===y); }
+function terrainTypeAt(u){ const t=terrainAt(u.x,u.y); return t?t.type:null; }
+/* Flanking: มีมิตรของผู้โจมตีประชิดเป้าหมาย ≥2 ตัว = โอบล้อม ดาเมจ ×1.25 (เฉพาะโจมตีพื้นฐาน) */
+function flankMultiplier(attacker, target){
+  const around=aliveUnits(attacker.owner).filter(u=>dist(u,target)===1).length;
+  return around>=2 ? 1.25 : 1;
+}
+/* Knockback: ผลักเป้าหมายออกจากผู้ผลักตามแกนหลัก n ช่อง หยุดเมื่อชนขอบ/หน่วยอื่น */
+function knockback(target, from, n){
+  for(let i=0;i<n;i++){
+    const ddx=target.x-from.x, ddy=target.y-from.y;
+    let nx=target.x, ny=target.y;
+    if(Math.abs(ddx)>=Math.abs(ddy) && ddx!==0) nx+=Math.sign(ddx);
+    else if(ddy!==0) ny+=Math.sign(ddy);
+    else break;
+    if(!inBoard(nx,ny)||unitAt(nx,ny)) break;
+    target.x=nx; target.y=ny; checkTrap(target);
+  }
+  log(`💨 ${target.name} ถูกผลักกระเด็น!`);
+}
+/* เรียกจาก doBasicStrike, discardCardForBasic และสกิลโจมตี (เฉพาะที่มีผู้ใช้เป็นบีสต์) */
 function applyElementalRider(attacker, target){
   const el=elementOf(attacker);
   if(!el || target.hp<=0) return;
   if(el==='fire'){
+    // ปฏิกิริยา 🔥+🌿: ไฟจุดระเบิดพิษที่ค้างอยู่ = ดาเมจก้อนใหญ่ทันที
+    if(target.dotKind==='poison' && target.dotTurns>0){
+      const burst=(target.dotDmgPerTurn||0)*(target.dotTurns||0)+10;
+      target.dotTurns=0; target.dotDmgPerTurn=0; target.dotKind=null;
+      log(`🔥💥 ปฏิกิริยา! จุดระเบิดพิษใส่ ${target.name} = ${burst}`);
+      dealDamage(target, burst, {attacker, noTypeAdv:true});
+      return;
+    }
     target.dotKind='burn'; target.dotTurns=Math.max(target.dotTurns||0,2); target.dotDmgPerTurn=(target.dotDmgPerTurn||0)+8;
     log(`🔥 ${target.name} ติดไฟจาก ${attacker.name}! (${target.dotDmgPerTurn} ดาเมจ/เทิร์น)`);
   } else if(el==='nature'){
@@ -522,6 +625,12 @@ function applyElementalRider(attacker, target){
     const ratio = attacker.tplId==='stormphoenix' ? 0.6 : 0.4;
     const chained=enemiesOf(attacker.owner).find(e=>e.uid!==target.uid && e.hp>0 && dist(e,target)===1);
     if(chained){ const bonus=Math.floor(attackAtkOf(attacker)*ratio); dealDamage(chained, bonus, {attacker, noTypeAdv:true}); log(`⚡ กระแสไฟฟ้าสาดจาก ${target.name} ใส่ ${chained.name} เพิ่ม ${bonus}!`); }
+    // ปฏิกิริยา ⚡+ไฟ/พิษ: สายฟ้ากระจายสถานะต่อเนื่องไปตัวข้างเคียงที่ยังไม่ติดสถานะ
+    if(target.dotKind && target.dotTurns>0){
+      const spread=enemiesOf(attacker.owner).find(e=>e.uid!==target.uid && e.hp>0 && dist(e,target)===1 && (e.dotTurns||0)===0);
+      if(spread){ spread.dotKind=target.dotKind; spread.dotTurns=target.dotTurns; spread.dotDmgPerTurn=target.dotDmgPerTurn;
+        log(`⚡${target.dotKind==='burn'?'🔥':'🌿'} ปฏิกิริยา! กระจาย${target.dotKind==='burn'?'ไฟ':'พิษ'}ไปยัง ${spread.name}`); }
+    }
   } else if(el==='dark'){
     // Sacrifice: จ่าย 10% ของ HP ปัจจุบัน (ขั้นต่ำ 5) แลกดาเมจเสริม — ตัวเลือดมากเสี่ยงมากกว่าเดิม
     const cost=Math.max(5, Math.floor(attacker.hp*0.1)), bonus=15;
@@ -556,12 +665,12 @@ const CARDS = {
   /* --- Bear --- */
   guardstance:{type:'Skill', req:{species:'bear'}, name:'Guard', cost:1, icon:'🛡️', target:'self', shield:20, desc:'ผู้ใช้รับดาเมจ -20 จนถึงเทิร์นหน้า'},
   earthslam: {type:'Skill', req:{species:'bear'}, name:'Earth Slam', cost:3, icon:'💥', target:'self', aoeSelfAdj:35, desc:'ดาเมจ 35 ศัตรูทุกช่องรอบผู้ใช้'},
-  roar:      {type:'Skill', req:{species:'bear'}, name:'Roar', cost:2, icon:'🗣️', target:'enemy', range:2, taunt:true, dmg:10, desc:'ดาเมจ 10 + ดึงศัตรูเข้าหาผู้ใช้ 1 ช่อง'},
+  roar:      {type:'Skill', req:{species:'bear'}, name:'Roar', cost:2, icon:'🗣️', target:'enemy', range:2, taunt:true, dmg:10, silence:1, desc:'ดาเมจ 10 + ดึงเข้าหา 1 ช่อง + 🤐 ปิดปาก 1 เทิร์น'},
   fortify:   {type:'Skill', req:{species:'bear'}, name:'Fortify', cost:2, icon:'🧱', target:'ally', hpBonus:40, desc:'บีสต์เป้าหมาย Max HP +40 ถาวร'},
   /* --- Bird --- */
   wingdive:  {type:'Skill', req:{species:'bird'}, name:'Wing Dive', cost:2, icon:'🪽', target:'enemy', range:3, dmg:35, retreat:true, desc:'ดาเมจ 35 ระยะ 3 แล้วถอยกลับ 1 ช่อง'},
   updraft:   {type:'Skill', req:{species:'bird'}, name:'Updraft', cost:1, icon:'🌬️', target:'self', moveBonus:3, desc:'ผู้ใช้ Move+3 ทันที'},
-  wingstorm: {type:'Skill', req:{species:'bird'}, name:'Wing Storm', cost:3, icon:'🌀', target:'self', aoeRange:2, aoeDmg:25, desc:'ดาเมจ 25 ศัตรูทุกตัวในระยะ 2 ของผู้ใช้'},
+  wingstorm: {type:'Skill', req:{species:'bird'}, name:'Wing Storm', cost:3, icon:'🌀', target:'self', aoeRange:2, aoeDmg:25, aoeKnockback:1, desc:'ดาเมจ 25 + 💨 ผลักศัตรูทุกตัวในระยะ 2'},
   /* --- Dragon --- */
   icebreath: {type:'Skill', req:{species:'dragon'}, name:'Ice Breath', cost:3, icon:'❄️', target:'enemy', range:2, dmg:45, freeze:true, desc:'ดาเมจ 45 ระยะ 2 + Freeze 1 เทิร์น'},
   tailsweep: {type:'Skill', req:{species:'dragon'}, name:'Tail Sweep', cost:2, icon:'🌪️', target:'self', aoeSelfAdj:25, desc:'ดาเมจ 25 ศัตรูทุกช่องรอบผู้ใช้'},
@@ -573,7 +682,7 @@ const CARDS = {
   /* --- Turtle --- */
   shellguard:{type:'Skill', req:{species:'turtle'}, name:'Shell Guard', cost:1, icon:'🐚', target:'self', shield:25, desc:'ผู้ใช้รับดาเมจ -25 จนถึงเทิร์นหน้า'},
   counter:   {type:'Skill', req:{species:'turtle'}, name:'Counter Shell', cost:2, icon:'↩️', target:'self', counter:true, desc:'ครั้งถัดไปที่ถูกตี สวนกลับดาเมจครึ่งหนึ่ง'},
-  shellslam: {type:'Skill', req:{species:'turtle'}, name:'Shell Slam', cost:2, icon:'🪨', target:'enemy', range:1, dmg:25, desc:'ดาเมจ 25 ระยะ 1'},
+  shellslam: {type:'Skill', req:{species:'turtle'}, name:'Shell Slam', cost:2, icon:'🪨', target:'enemy', range:1, dmg:25, knockback:1, desc:'ดาเมจ 25 ระยะ 1 + 💨 ผลักกระเด็น 1 ช่อง'},
   /* --- Neutral (ทุกสายใส่ได้) --- */
   fireball:  {type:'Spell', name:'Fireball', cost:3, icon:'🔥', target:'enemy', range:2, dmg:40, aoeAdj:20, desc:'ดาเมจ 40 + รอบเป้าหมาย 20 ระยะ 2'},
   heal:      {type:'Spell', name:'Heal', cost:2, icon:'💚', target:'ally', heal:50, desc:'ฟื้นฟู HP 50 ให้บีสต์ฝ่ายเรา'},
@@ -666,7 +775,7 @@ function newBeastUnit(tpl, owner, x, y, isLeader){
     hp:b.hp, maxHp:b.hp, atk:b.atk, move:b.move, baseMove:b.move, freeMove:Math.ceil(b.move/2), range:b.range,
     passiveKey:b.key, passiveText:b.passive, isLeader:!!isLeader,
     hasMoved:false, hasActed:false, rebirthUsed:false, chilledNextMove:0, frozenTurns:0,
-    atkBuff:0, shield:0, counterReady:false,
+    atkBuff:0, shield:0, counterReady:false, silencedTurns:0,
     dotTurns:0, dotDmgPerTurn:0, dotKind:null,
     stage:b.stage||0, turnsSurvived:0, dmgAbsorbed:0, packSustainTurns:0 };
 }
@@ -679,7 +788,7 @@ const state = {
   energy:{player:3, enemy:3},
   deck:{player:[], enemy:[]},
   hand:{player:[], enemy:[]},
-  units:[], traps:[],
+  units:[], traps:[], terrain:[],
   selection:null,
   over:false,
   everDeployed:{player:false, enemy:false},
@@ -815,6 +924,7 @@ function cloneAndSwapState(){
   c.turn = c.turn==='player' ? 'enemy' : 'player';
   c.units.forEach(u=>{ u.owner = u.owner==='player'?'enemy':'player'; u.y = ROWS-1-u.y; });
   c.traps.forEach(t=>{ t.owner = t.owner==='player'?'enemy':'player'; t.y = ROWS-1-t.y; });
+  (c.terrain||[]).forEach(t=>{ t.y = ROWS-1-t.y; }); // มิเรอร์ภูมิประเทศตามแกน y (เลย์เอาต์สมมาตรอยู่แล้ว)
   c.selection=null; // selection is purely local UI state — never worth syncing
   return c;
 }
@@ -853,6 +963,7 @@ function handleNetMessage(raw){
   if(msg.type==='state'){ applyIncomingState(msg.state); }
   else if(msg.type==='pick'){ opponentNetPick=msg.pick; maybeStartNetGame(); }
   else if(msg.type==='rematch'){ netRematch(true); }
+  else if(msg.type==='ban'){ oppBan=msg.key; document.getElementById('banStatus').textContent = myBan?'ทั้งสองฝ่ายแบนแล้ว — ไปเลือก Leader':`อีกฝ่ายแบน ${LEADERS[msg.key].title} แล้ว — ตาคุณแบน`; maybeProceedBan(); }
 }
 function wireConn(c, role){
   netConn=c; netRole=role;
@@ -860,13 +971,14 @@ function wireConn(c, role){
     NET_MODE=true;
     document.getElementById('netStatus').textContent = '🟢 เชื่อมต่อแล้ว (P2P)';
     document.getElementById('netLobby').classList.remove('show');
-    renderLeaderSelect();
+    showBanScreen(); // P2P เริ่มด้วยเฟส Ban ก่อนเลือก Leader
   });
   c.on('data', handleNetMessage);
   c.on('close', ()=>{ document.getElementById('netStatus').textContent='🔴 การเชื่อมต่อหลุด'; });
   c.on('error', ()=>{ document.getElementById('netStatus').textContent='🔴 การเชื่อมต่อผิดพลาด'; });
 }
 document.getElementById('btnPlayAI').addEventListener('click',()=>{
+  survival.active=false; bannedLeaders=[];
   document.getElementById('netLobby').classList.remove('show');
   renderLeaderSelect();
 });
@@ -974,6 +1086,7 @@ document.getElementById('btnJoinConnect').addEventListener('click',()=>{
 function renderLeaderSelect(){
   const wrap=document.getElementById('leaderGrid'); wrap.innerHTML='';
   Object.entries(LEADERS).forEach(([key,L])=>{
+    if(bannedLeaders.includes(key)) return; // ซ่อนสายที่ถูกแบนในเฟส Draft
     const b=BEASTS[L.beast];
     const core=L.core.map(([id,n])=>`${(BEASTS[id]?BEASTS[id].name:CARDS[id].name)} ×${n}`).join(' · ');
     const el=document.createElement('div'); el.className='leaderCard';
@@ -1002,6 +1115,7 @@ function startGame(leaderKey, customCounts, forcedEnemyKey, forcedEnemyCounts){
   state.hand.player=state.deck.player.splice(0,HAND_SIZE);
   state.hand.enemy=state.deck.enemy.splice(0,HAND_SIZE);
   state.units=[]; state.traps=[];
+  state.terrain=TERRAIN_LAYOUT.map(t=>({...t})); // ภูมิประเทศคงที่ สมมาตรทั้งสองฝั่ง
   state.energy={player:3, enemy:3};
   state.charge={player:0, enemy:0};
   state.bulwarkPool={player:0, enemy:0};
@@ -1017,6 +1131,7 @@ function startGame(leaderKey, customCounts, forcedEnemyKey, forcedEnemyCounts){
   log(`คู่ต่อสู้: ${LEADERS[enemyKey].title}`);
   render();
   if(!introShown){ introShown=true; showHowto(); } // โชว์วิธีเล่นครั้งแรกที่เริ่มเกม
+  mulliganDone=false; openMulligan();               // เปิดให้จัดมือเปิด (โหมดเดี่ยว)
 }
 /* ---------------- Deck Builder screen ---------------- */
 let draftLeaderKey=null, draftCounts={};
@@ -1094,6 +1209,7 @@ document.getElementById('deckStartBtn').addEventListener('click',()=>{
     maybeStartNetGame();
     return;
   }
+  if(survival.active){ survival.leaderKey=draftLeaderKey; survival.counts={...draftCounts}; survival.stage=1; startSurvivalStage(); return; }
   startGame(draftLeaderKey, {...draftCounts});
 });
 function inZone(x,y,owner){ return (owner==='player'?PLAYER_ZONE:ENEMY_ZONE).includes(y); }
@@ -1119,6 +1235,7 @@ function chargeInfo(owner){
 function dealDamage(target, amount, opts={}){
   if(target.hp<=0) return;
   if(target.passiveKey==='evade' && !opts.trueHit && Math.random()<0.3){ log(`${target.name} หลบการโจมตี!`); return; }
+  if(terrainTypeAt(target)==='bush' && !opts.trueHit && Math.random()<0.25){ log(`🌳 ${target.name} หลบในพุ่มไม้!`); return; }
   // แพ้ทางธาตุ: ปรับดาเมจตามความสัมพันธ์ธาตุผู้โจมตี↔เป้าหมาย
   if(opts.attacker && !opts.noTypeAdv){
     const m=typeMultiplier(elementOf(opts.attacker), elementOf(target));
@@ -1155,10 +1272,13 @@ function attackAtkOf(unit){
     const pack = state.units.filter(u=>u.owner===unit.owner && u.species==='wolf' && u.hp>0);
     if(pack.length>1) atk += (unit.passiveKey==='alphapack'?15:10);
   }
+  if(terrainTypeAt(unit)==='highground') atk=Math.round(atk*1.25); // ที่สูงยิงแรงขึ้น
   return atk;
 }
 function doBasicStrike(attacker, target){
-  dealDamage(target, attackAtkOf(attacker), {attacker});
+  const fm=flankMultiplier(attacker, target);
+  if(fm>1) log(`🎯 โอบล้อม ${target.name}! ดาเมจ ×1.25`);
+  dealDamage(target, Math.round(attackAtkOf(attacker)*fm), {attacker});
   if(attacker.passiveKey==='chill') target.chilledNextMove=1;
   if(attacker.passiveKey==='alphapack'){
     const packCount = aliveUnits(attacker.owner).filter(u=>u.species==='wolf').length;
@@ -1291,6 +1411,15 @@ function checkWin(){
 }
 function endGame(winner){
   state.over=true;
+  if(survival.active){
+    if(winner==='player'){ survival.stage++; log(`🏆 ผ่านด่าน ${survival.stage-1}!`); openSurvivalReward(); return; }
+    document.getElementById('overlay').classList.add('show');
+    document.getElementById('overlayMsg').textContent = `จบรัน — ไปถึงด่าน ${survival.stage}`;
+    document.getElementById('rematchBtn').style.display='none';
+    survival.active=false;
+    log(`☠️ Survival จบที่ด่าน ${survival.stage}`);
+    return;
+  }
   document.getElementById('overlay').classList.add('show');
   document.getElementById('overlayMsg').textContent = winner==='player' ? 'YOU WIN!' : 'YOU LOSE...';
   document.getElementById('rematchBtn').style.display = NET_MODE ? 'inline-block' : 'none';
@@ -1298,6 +1427,7 @@ function endGame(winner){
 }
 /* ---------------- Card legality ---------------- */
 function canCast(unit, card){
+  if(unit.silencedTurns>0) return false; // 🤐 ถูกปิดปาก ใช้สกิลไม่ได้
   if(!card.req) return true;
   return unit.species===card.req.species;
 }
@@ -1348,6 +1478,9 @@ function renderBoard(){
     for(let x=0;x<COLS;x++){
       const tile=document.createElement('div');
       tile.className='tile'+(PLAYER_ZONE.includes(y)?' zone-player':'')+(ENEMY_ZONE.includes(y)?' zone-enemy':'');
+      const terr=terrainAt(x,y);
+      if(terr){ tile.classList.add('terr-'+terr.type); const ti=document.createElement('div'); ti.className='terr-icon';
+        ti.textContent=TERRAIN_TYPES[terr.type].icon; ti.title=`${TERRAIN_TYPES[terr.type].name} — ${TERRAIN_TYPES[terr.type].desc}`; tile.appendChild(ti); }
       applyHighlight(tile,x,y);
       tile.addEventListener('click',()=>onTileClick(x,y));
       const tr=trapAt(x,y);
@@ -1366,7 +1499,7 @@ function renderBoard(){
         const uel=ELEMENTS[elementOf(u)];
         el.innerHTML=`${u.isLeader?'<div class="leader-badge">👑</div>':''}${u.stage>0?'<div class="stage-badge">✨</div>':''}<div class="elem-badge" title="${uel.name}">${uel.icon}</div><div class="icon">${u.icon}</div>
           <div class="hpbar"><div class="hpfill" style="width:${Math.max(0,u.hp/u.maxHp*100)}%"></div></div>
-          <div class="status">${u.frozenTurns>0?'🧊':''}${u.shield>0?'🛡️':''}${u.counterReady?'↩️':''}${u.dotTurns>0?(u.dotKind==='burn'?'🔥':'🌿'):''}</div>`;
+          <div class="status">${u.frozenTurns>0?'🧊':''}${u.silencedTurns>0?'🤐':''}${u.shield>0?'🛡️':''}${u.counterReady?'↩️':''}${u.dotTurns>0?(u.dotKind==='burn'?'🔥':'🌿'):''}</div>`;
         el.addEventListener('click',(e)=>{ e.stopPropagation(); onUnitClick(u); });
         el.addEventListener('mouseenter',()=>showInfo(u));
         el.addEventListener('mouseleave',hideInfo);
@@ -1597,8 +1730,10 @@ function resolveCard(idx, ctx, owner='player'){
   if(card.dmg && target){ dealDamage(target, card.dmg, {attacker:caster}); if(caster) applyElementalRider(caster, target); /* สกิลโจมตีก็ติดธาตุของผู้ใช้ ทำให้สายที่พึ่งสกิล (Bird/Dragon) ได้ใช้เอกลักษณ์ธาตุด้วย */ }
   if(card.aoeAdj && target){ enemiesOf(owner).filter(u=>u.uid!==target.uid&&dist(u,target)===1).forEach(u=>dealDamage(u,card.aoeAdj)); }
   if(card.aoeSelfAdj && caster){ enemiesOf(owner).filter(u=>dist(u,caster)===1).forEach(u=>dealDamage(u,card.aoeSelfAdj,{attacker:caster})); }
-  if(card.aoeDmg && caster){ enemiesOf(owner).filter(u=>dist(u,caster)<=card.aoeRange).forEach(u=>dealDamage(u,card.aoeDmg,{attacker:caster})); }
+  if(card.aoeDmg && caster){ enemiesOf(owner).filter(u=>dist(u,caster)<=card.aoeRange).forEach(u=>{ dealDamage(u,card.aoeDmg,{attacker:caster}); if(card.aoeKnockback && u.hp>0) knockback(u, caster, card.aoeKnockback); }); }
   if(card.freeze && target) target.frozenTurns=1;
+  if(card.silence && target && target.hp>0){ target.silencedTurns=Math.max(target.silencedTurns||0, card.silence); log(`🤐 ${target.name} ถูกปิดปาก ${card.silence} เทิร์น`); }
+  if(card.knockback && target && caster && target.hp>0){ knockback(target, caster, card.knockback); }
   if((card.pull||card.taunt) && target && caster) pullToward(target, caster, card.pull||1);
   if(card.retreat && caster && target){
     const dx=Math.sign(caster.x-target.x), dy=Math.sign(caster.y-target.y);
@@ -1685,6 +1820,104 @@ function netRematch(remote){
 }
 document.getElementById('rematchBtn').addEventListener('click',()=>netRematch(false));
 
+/* ---------------- Mulligan (จัดมือเปิด ครั้งเดียว) — เฉพาะโหมดเดี่ยว ---------------- */
+let mulliganDone=false, mulResel=new Set();
+function cardFace(card){
+  if(card.type==='Beast'){ const b=BEASTS[card.beast]; return {icon:b.icon, name:b.name, stat:`HP${b.hp} ATK${b.atk} Mv${b.move} Rg${b.range}`, elem:b.element||SPECIES_ELEMENT[b.species]}; }
+  return {icon:card.icon, name:card.name, stat:card.desc, elem:card.req?SPECIES_ELEMENT[card.req.species]:null};
+}
+function openMulligan(){
+  if(NET_MODE || mulliganDone || state.over) return; // โหมด P2P ข้าม (กันไม่ยุติธรรมเพราะฝั่ง guest ไม่ผ่าน startGame)
+  mulResel=new Set(); renderMulligan();
+  document.getElementById('mulligan').classList.add('show');
+}
+function renderMulligan(){
+  const wrap=document.getElementById('mulHand'); wrap.innerHTML='';
+  state.hand.player.forEach((card,idx)=>{
+    const f=cardFace(card);
+    const c=document.createElement('div');
+    c.className='card type-'+card.type+(mulResel.has(idx)?' reject':'');
+    c.innerHTML=`<div class="ctype">${card.type}</div>${f.elem?`<div class="celem">${ELEMENTS[f.elem].icon}</div>`:''}<div class="cicon">${f.icon}</div><div class="cname">${f.name}</div><div class="cstat">${f.stat}</div><div class="ccost">${card.cost}</div>`;
+    c.addEventListener('click',()=>{ if(mulResel.has(idx)) mulResel.delete(idx); else mulResel.add(idx); renderMulligan(); });
+    wrap.appendChild(c);
+  });
+  document.getElementById('mulCount').textContent = mulResel.size? `จะทิ้ง ${mulResel.size} ใบเพื่อจั่วใหม่` : 'คลิกการ์ดที่อยากทิ้ง (หรือกดเก็บทั้งหมด)';
+}
+function confirmMulligan(){
+  const idxs=[...mulResel].sort((a,b)=>b-a), removed=[];
+  idxs.forEach(i=>{ removed.push(state.hand.player[i]); state.hand.player.splice(i,1); });
+  for(let i=0;i<removed.length && state.deck.player.length;i++) state.hand.player.push(state.deck.player.shift());
+  removed.forEach(c=>state.deck.player.push(c));
+  shuffle(state.deck.player);
+  mulliganDone=true;
+  document.getElementById('mulligan').classList.remove('show'); render();
+}
+document.getElementById('mulConfirmBtn').addEventListener('click', confirmMulligan);
+document.getElementById('mulKeepBtn').addEventListener('click',()=>{ mulliganDone=true; document.getElementById('mulligan').classList.remove('show'); });
+
+/* ---------------- Survival Run (roguelike lite) ---------------- */
+let survival={active:false, stage:1, leaderKey:null, counts:null};
+document.getElementById('btnSurvival').addEventListener('click',()=>{
+  survival={active:true, stage:1, leaderKey:null, counts:null};
+  bannedLeaders=[];
+  document.getElementById('netLobby').classList.remove('show');
+  renderLeaderSelect();
+});
+function startSurvivalStage(){
+  const enemyKey=shuffle(Object.keys(LEADERS).filter(k=>k!==survival.leaderKey))[0];
+  startGame(survival.leaderKey, survival.counts, enemyKey, defaultCountsForLeader(enemyKey));
+  const st=survival.stage;
+  state.energy.enemy = 3 + Math.min(6, st-1);          // ศัตรูเริ่มพลังงานมากขึ้นตามด่าน
+  const bonusHp=(st-1)*40;
+  if(bonusHp) aliveUnits('enemy').forEach(u=>{ u.maxHp+=bonusHp; u.hp+=bonusHp; }); // Leader ศัตรูอึดขึ้น
+  log(`🏔️ SURVIVAL ด่าน ${st} — ศัตรูแข็งขึ้น (พลังงานเริ่ม ${state.energy.enemy}${bonusHp?`, HP +${bonusHp}`:''})`);
+  render();
+}
+function openSurvivalReward(){
+  const pool=poolForLeader(survival.leaderKey);
+  const all=[...pool.beasts, ...pool.skills, ...pool.neutral];
+  const picks=shuffle(all.slice()).slice(0,3);
+  const grid=document.getElementById('rewardGrid'); grid.innerHTML='';
+  document.getElementById('rewardTitle').textContent=`ผ่านด่าน ${survival.stage-1}! เลือกรางวัลเข้าด่าน ${survival.stage}`;
+  picks.forEach(id=>{
+    const isBeast=!!BEASTS[id]; const data=isBeast?BEASTS[id]:CARDS[id];
+    const elem=isBeast?(data.element||SPECIES_ELEMENT[data.species]):(data.req?SPECIES_ELEMENT[data.req.species]:null);
+    const c=document.createElement('div'); c.className='card rewardCard type-'+(isBeast?'Beast':data.type);
+    c.innerHTML=`<div class="ctype">${isBeast?'Beast':data.type}</div>${elem?`<div class="celem">${ELEMENTS[elem].icon}</div>`:''}<div class="cicon">${data.icon}</div><div class="cname">${data.name}</div><div class="cstat">${isBeast?`HP${data.hp} ATK${data.atk}`:data.desc}</div><div class="ccost">${data.cost}</div>`;
+    c.addEventListener('click',()=>{ survival.counts[id]=(survival.counts[id]||0)+1; document.getElementById('survivalReward').classList.remove('show'); startSurvivalStage(); });
+    grid.appendChild(c);
+  });
+  document.getElementById('survivalReward').classList.add('show');
+}
+
+/* ---------------- Draft/Ban (P2P) — แต่ละฝ่ายแบน Leader คู่แข่ง 1 สาย ---------------- */
+let bannedLeaders=[], myBan=null, oppBan=null;
+function showBanScreen(){
+  myBan=null; oppBan=null; bannedLeaders=[];
+  const grid=document.getElementById('banGrid'); grid.innerHTML='';
+  Object.entries(LEADERS).forEach(([key,L])=>{
+    const b=BEASTS[L.beast];
+    const el=document.createElement('button'); el.className='actionBtn secondary'; el.innerHTML=`${b.icon} ${L.title}`;
+    el.addEventListener('click',()=>{
+      if(myBan) return;
+      myBan=key; sendNet({type:'ban', key});
+      [...grid.children].forEach(c=>c.disabled=true);
+      document.getElementById('banStatus').textContent = oppBan ? 'ทั้งสองฝ่ายแบนแล้ว — ไปเลือก Leader' : `คุณแบน ${L.title} — รออีกฝ่ายแบน...`;
+      maybeProceedBan();
+    });
+    grid.appendChild(el);
+  });
+  document.getElementById('banStatus').textContent='เลือกสายที่จะแบน';
+  document.getElementById('banScreen').classList.add('show');
+}
+function maybeProceedBan(){
+  if(myBan && oppBan){
+    bannedLeaders=[myBan, oppBan];
+    document.getElementById('banScreen').classList.remove('show');
+    renderLeaderSelect();
+  }
+}
+
 /* ---------------- Turn flow ---------------- */
 document.getElementById('cancelBtn').addEventListener('click',()=>{ state.selection=null; setHint('เลือกการ์ดหรือหน่วยของคุณ'); render(); });
 document.getElementById('restartBtn').addEventListener('click',()=>{
@@ -1719,7 +1952,13 @@ function startOfTurn(owner){
       u.packSustainTurns = otherWolf ? (u.packSustainTurns||0)+1 : 0;
     }
     if(u.frozenTurns>0){ u.frozenTurns--; u.hasMoved=true; u.hasActed=true; }
+    if(u.silencedTurns>0) u.silencedTurns--; // 🤐 คลาย Silence ทีละเทิร์น
     if(u.chilledNextMove>0){ u.move=Math.max(0,u.move-1); u.freeMove=Math.max(0,u.freeMove-1); u.chilledNextMove=0; }
+    // ภูมิประเทศ: ลาวาเผา / น้ำดับไฟ-ล้างพิษ / ศาลเจ้าให้ทรัพยากร (จุดยึด)
+    const terr=terrainTypeAt(u);
+    if(u.hp>0 && terr==='lava'){ log(`🌋 ${u.name} ยืนบนลาวา -15`); dealDamage(u,15,{trueHit:true,noTypeAdv:true}); }
+    if(u.hp>0 && terr==='water' && u.dotTurns>0){ u.dotTurns=0; u.dotDmgPerTurn=0; u.dotKind=null; log(`💧 ${u.name} ลงน้ำ ดับไฟ/ล้างพิษ`); }
+    if(u.hp>0 && terr==='shrine'){ state.energy[owner]=Math.min(10,state.energy[owner]+1); gainCharge(owner,1); log(`⛲ ${u.name} ยึดศาลเจ้า — +1 พลังงาน +1 ทรัพยากร`); }
     // Element — Fire/Nature: burn·poison เจ็บต่อเนื่องตอนต้นเทิร์นของเจ้าของเป้าหมาย
     if(u.dotTurns>0 && u.hp>0){
       const dmg=u.dotDmgPerTurn||0;
