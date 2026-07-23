@@ -53,14 +53,12 @@
     text-shadow:0 3px 0 rgba(0,0,0,0.3);
   }
   #app{ position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; padding:10px 12px; gap:8px; }
-
   /* ---------- top bar ---------- */
   #topbar{ width:100%; max-width:920px; display:flex; align-items:center; justify-content:space-between; }
   .energy{ display:flex; align-items:center; gap:6px; font-weight:600; }
   .energy .pips{ display:flex; gap:2px; }
   .pip{ width:9px; height:16px; border-radius:2px; background:rgba(255,255,255,0.12); border:1px solid rgba(0,0,0,0.3); }
   .pip.on{ background:linear-gradient(180deg,var(--gold),var(--gold-dark)); box-shadow:0 0 6px rgba(217,164,65,0.7); }
-
   /* ---------- board ---------- */
   #board{
     display:grid; grid-template-columns:repeat(5,64px); grid-template-rows:repeat(5,64px);
@@ -82,7 +80,6 @@
   .tile.hl-deploy{ box-shadow:inset 0 0 0 2px var(--gold); cursor:pointer; }
   .tile.hl-move:hover, .tile.hl-advance:hover, .tile.hl-target:hover, .tile.hl-deploy:hover{ transform:scale(1.04); }
   .trap-marker{ position:absolute; bottom:3px; right:3px; font-size:10px; opacity:0.85; }
-
   .unit{ width:56px; height:56px; border-radius:8px; position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
     border:2px solid var(--wood-dark); cursor:pointer; user-select:none; }
   .unit.player{ background:linear-gradient(160deg,#4d6a37,#324a20); }
@@ -98,7 +95,6 @@
   .unit .hpbar{ width:44px; height:5px; background:rgba(0,0,0,0.5); border-radius:3px; overflow:hidden; margin-top:2px; }
   .unit .hpfill{ height:100%; background:linear-gradient(90deg,#8fdb6a,#4f9c2e); }
   .unit .status{ position:absolute; bottom:-7px; font-size:9px; }
-
   /* ---------- hand ---------- */
   #handWrap{ width:100%; max-width:960px; display:flex; flex-direction:column; align-items:center; gap:4px; }
   #hint{ font-size:12px; color:var(--parchment-2); min-height:16px; text-align:center; }
@@ -123,7 +119,6 @@
   .type-Beast{ background:var(--sage-dark); } .type-Skill{ background:var(--sky-dark); }
   .type-Spell{ background:var(--plum-dark); } .type-Trap{ background:var(--berry-dark); }
   .type-Tech{ background:var(--clay-dark); }
-
   #btnRow{ display:flex; gap:8px; }
   button.actionBtn{
     font-family:'Kanit',sans-serif; font-weight:600; font-size:12.5px; padding:8px 16px; border-radius:8px; cursor:pointer;
@@ -133,20 +128,16 @@
   button.actionBtn:hover{ filter:brightness(1.08); }
   button.actionBtn.secondary{ background:linear-gradient(180deg,#8a7357,#5c4a35); color:var(--parchment); }
   button.actionBtn:disabled{ opacity:0.4; cursor:not-allowed; }
-
   #log{ width:100%; max-width:960px; height:52px; overflow-y:auto; font-size:11px; color:var(--parchment-2);
     background:rgba(0,0,0,0.25); border-radius:6px; padding:4px 8px; }
-
   #overlay{ position:fixed; inset:0; background:rgba(10,7,4,0.85); display:none; align-items:center; justify-content:center; z-index:20; flex-direction:column; gap:14px; }
   #overlay.show{ display:flex; }
   #overlay .msg{ font-family:'Press Start 2P','Kanit',monospace; font-size:22px; color:var(--gold); text-shadow:0 3px 0 rgba(0,0,0,0.4); }
-
   .infoPanel{ position:fixed; top:10px; right:10px; width:190px; background-image:linear-gradient(160deg,var(--parchment) 0%, var(--parchment-2) 100%);
     color:var(--ink); border-radius:8px; padding:8px 10px; font-size:11px; border:1.5px solid rgba(62,38,23,0.5);
     box-shadow:0 4px 12px rgba(0,0,0,0.4); display:none; }
   .infoPanel.show{ display:block; }
   .infoPanel b{ font-size:12px; }
-
   /* ---------- species lock + leader charge ---------- */
   .card .creq{ position:absolute; top:22px; right:6px; font-size:8px; font-weight:700; padding:1px 4px;
     border-radius:4px; background:var(--wood-dark); color:var(--gold); letter-spacing:.3px; }
@@ -157,7 +148,6 @@
     border:1px solid rgba(0,0,0,0.5); overflow:hidden; display:inline-block; }
   #chargeBox .cfill{ display:block; height:100%; background:linear-gradient(90deg,var(--sky),var(--plum)); transition:width .25s ease; }
   button.actionBtn.ult{ background:linear-gradient(180deg,var(--plum),var(--plum-dark)); color:#2a1c3a; }
-
   /* ---------- leader select ---------- */
   #leaderSelect{ position:fixed; inset:0; z-index:30; display:none; flex-direction:column; align-items:center;
     gap:10px; padding:18px 12px; overflow-y:auto; background:radial-gradient(circle at 50% 0%, #3a2b1a 0%, #150e08 75%); }
@@ -175,7 +165,6 @@
   .leaderCard .lline{ font-size:10.5px; line-height:1.45; margin-bottom:3px; }
   .leaderCard .lline b{ color:var(--sage-dark); }
   .leaderCard .lcore{ font-size:9.5px; color:var(--ink-soft); border-top:1px dashed rgba(62,38,23,0.35); margin-top:6px; padding-top:5px; line-height:1.4; }
-
   /* ---------- deck builder ---------- */
   #deckBuilder{ position:fixed; inset:0; z-index:30; display:none; flex-direction:column; align-items:center;
     gap:8px; padding:16px 12px; overflow-y:auto; background:radial-gradient(circle at 50% 0%, #3a2b1a 0%, #150e08 75%); }
@@ -199,7 +188,12 @@
   .deckRow button.drbtn:disabled{ opacity:0.35; cursor:not-allowed; }
   .deckRow .drcount{ width:16px; text-align:center; font-weight:700; font-size:12px; }
   #deckBuilderBtnRow{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; padding:6px 0 14px; }
-
+  /* ---------- evolution chooser (แตกสายวิวัฒน์) ---------- */
+  #evoChoose{ position:fixed; inset:0; z-index:40; display:none; flex-direction:column; align-items:center; justify-content:center;
+    gap:14px; padding:18px 12px; background:rgba(10,7,4,0.9); }
+  #evoChoose.show{ display:flex; }
+  #evoChoose .lead{ font-size:12px; color:var(--parchment-2); max-width:520px; text-align:center; line-height:1.6; }
+  #evoGrid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,280px)); gap:12px; justify-content:center; width:100%; max-width:620px; }
   /* ---------- impact fx: hit flash + screen shake ---------- */
   @keyframes hitFlash{
     0%{ filter:brightness(2.4) saturate(0.3) drop-shadow(0 0 6px #fff); transform:scale(1.12); }
@@ -208,7 +202,6 @@
   }
   .unit.hit-flash{ animation:hitFlash .3s ease-out; }
   .unit.hit-flash-big{ animation:hitFlash .5s ease-out; }
-
   @keyframes shakeScreen{
     0%,100%{ transform:translate(0,0); }
     10%{ transform:translate(-5px,3px); }
@@ -219,7 +212,6 @@
     85%{ transform:translate(2px,-1px); }
   }
   #board.shake{ animation:shakeScreen .22s ease-in-out; }
-
   @keyframes shakeScreenBig{
     0%,100%{ transform:translate(0,0) rotate(0deg); filter:brightness(1); }
     8%{ transform:translate(-11px,7px) rotate(-1.2deg); filter:brightness(1.6); }
@@ -231,7 +223,6 @@
     90%{ transform:translate(-2px,1px) rotate(0deg); }
   }
   #board.shake-big{ animation:shakeScreenBig .5s ease-in-out; }
-
   /* ---------- P2P lobby ---------- */
   #netLobby{ position:fixed; inset:0; z-index:40; display:none; flex-direction:column; align-items:center;
     justify-content:center; gap:16px; padding:18px 12px; background:radial-gradient(circle at 50% 0%, #3a2b1a 0%, #150e08 75%); }
@@ -264,9 +255,7 @@
       <div id="netStatus"></div>
     </div>
   </div>
-
   <div id="board"></div>
-
   <div id="handWrap">
     <div id="hint">เลือกการ์ด Beast เพื่อวางลงสนาม หรือคลิกทีมของคุณเพื่อเดิน/โจมตี — ช่องฟ้า=เดินฟรี, ช่องส้ม=ต้องทิ้งการ์ด 1 ใบ</div>
     <div id="hand"></div>
@@ -279,12 +268,9 @@
       <button class="actionBtn secondary" id="restartBtn">เลือก Leader ใหม่</button>
     </div>
   </div>
-
   <div id="log"></div>
 </div>
-
 <div class="infoPanel" id="infoPanel"></div>
-
 <div id="netLobby" class="show">
   <h1>PROJECT EDEN TACTICS</h1>
   <div class="lead">เล่นคนเดียวกับ AI หรือเชื่อมต่อกับเพื่อนแบบ P2P (ผ่าน WebRTC) — ฝ่ายหนึ่งกด "สร้างห้อง" แล้วส่งรหัสห้องให้อีกฝ่ายกด "เข้าร่วมห้อง"</div>
@@ -309,16 +295,13 @@
     <div class="netHint">⚠️ ถ้าเจอ "server-error" ให้ลองเปิดไฟล์นี้นอกหน้าแชท (ดาวน์โหลดแล้วเปิดด้วย Safari/Chrome จริง)</div>
   </div>
 </div>
-
 <div id="netWaitOverlay"><div class="msg" id="netWaitMsg"></div></div>
-
 <div id="leaderSelect">
   <h1>เลือก LEADER BEAST</h1>
   <div class="lead">Leader กำหนดสายของเด็คคุณ — ตัว Leader ลงสนามตั้งแต่เทิร์นแรก พร้อม Passive, ทรัพยากรประจำสาย และ Ultimate
   ที่ชาร์จด้วยทรัพยากรนั้น เลือกแล้วไปหน้าถัดไปเพื่อจัดเด็ค 30 ใบเองได้</div>
   <div id="leaderGrid"></div>
 </div>
-
 <div id="deckBuilder">
   <h1>จัดเด็คของคุณ</h1>
   <div class="lead" id="deckBuilderLead"></div>
@@ -330,10 +313,13 @@
     <button class="actionBtn" id="deckStartBtn" disabled>เริ่มเกม ▶</button>
   </div>
 </div>
-
+<div id="evoChoose">
+  <h1 id="evoTitle">เลือกสายวิวัฒน์</h1>
+  <div class="lead">แต่ละสายวิวัฒน์มีบทบาทและธาตุต่างกัน — เลือกได้ครั้งเดียวต่อการวิวัฒน์ 1 ครั้ง</div>
+  <div id="evoGrid"></div>
+  <button class="actionBtn secondary" id="evoCancelBtn">ยกเลิก (เก็บเงื่อนไขไว้ก่อน)</button>
+</div>
 <div id="overlay"><div class="msg" id="overlayMsg"></div><button class="actionBtn" onclick="location.reload()">เล่นอีกครั้ง</button></div>
-
-
 <script>
 /* ============================================================
    PROJECT EDEN TACTICS — prototype v2
@@ -346,12 +332,14 @@
       (neutral Spell/Trap/Tech fill the rest). The leader itself is
       deployed on the board at the start and carries a Passive, a
       species Resource, and an Ultimate charged by that resource.
+   3) Branching Evolution: บีสต์ที่วิวัฒน์ได้จะมี "สายวิวัฒน์" มากกว่า 1
+      ทาง (ascendTo เป็น array) ผู้เล่นเลือกเองว่าจะโตเป็นร่างไหน แต่ละ
+      ร่างมีบทบาท/สเตตัส/และบางร่างเปลี่ยน "ธาตุ" ไปเลย (เช่น Forest Wolf
+      🔥 → Alpha Wolf 🔥 สายฝูง หรือ Hell Hound 🌑 สายเดี่ยวดุดัน)
    ============================================================ */
-
 const ROWS=5, COLS=5;
 const PLAYER_ZONE=[3,4], ENEMY_ZONE=[0,1];
 const DECK_SIZE=30, HAND_SIZE=5;
-
 /* ---------------- Free move / Discard-to-Basic system ----------------
    ปัญหาที่ต้องแก้: มือมีแต่การ์ด Beast/Spell ที่ใช้ไม่ได้ = เดินไม่ได้เลยทั้งเทิร์น
    ทางแก้:
@@ -364,35 +352,77 @@ const DECK_SIZE=30, HAND_SIZE=5;
 ------------------------------------------------------------------------ */
 const BASIC_STRIKE_DMG = 20;
 const DISCARD_STRIKE_RANGE_BONUS = 1;
-
-/* ---------------- Beasts ---------------- */
+/* ---------------- Beasts ----------------
+   ascendTo: string | array — ถ้าเป็น array คือ "แตกสายวิวัฒน์" ให้ผู้เล่นเลือก
+   element: ถ้าใส่ไว้ = override ธาตุประจำตัว (ใช้กับร่างวิวัฒน์ที่เปลี่ยนธาตุ)
+            ถ้าไม่ใส่ = ใช้ธาตุตาม species (SPECIES_ELEMENT) ตามเดิม
+------------------------------------------------ */
 const BEASTS = {
+  /* --- Wolf line 🔥 --- */
   wolf:    {id:'wolf', name:'Forest Wolf', icon:'🐺', species:'wolf', role:'Pack · เล่นเป็นทีม', cost:3, hp:180, atk:35, move:2, range:1,
             passive:'Pack Hunter: ATK+10 ถ้ามีหมาป่าอีกตัวในสนาม', key:'pack',
-            stage:1, ascendTo:'wolfalpha', ascendReq:{type:'packSustain', turns:3}, ascendCost:3},
+            stage:1, ascendTo:['wolfalpha','hellhound'], ascendReq:{type:'packSustain', turns:3}, ascendCost:3},
   wolfcub: {id:'wolfcub', name:'Wolf Cub', icon:'🐕', species:'wolf', role:'Pack · ลูกฝูง', cost:1, hp:90, atk:18, move:2, range:1,
             passive:'Pack Hunter: ATK+10 ถ้ามีหมาป่าอีกตัวในสนาม', key:'pack', token:true,
             stage:0, ascendTo:'wolf', ascendReq:{type:'surviveTurns', turns:2}, ascendCost:1},
   wolfalpha:{id:'wolfalpha', name:'Alpha Wolf', icon:'🐺', species:'wolf', role:'Pack · จ่าฝูง', hp:260, atk:45, move:2, range:1,
             passive:'สัญชาตญาณจ่าฝูง: ATK+15 ถ้ามีหมาป่าอีกตัวในสนาม · ถ้า Pack Count ≥4 โจมตีพื้นฐานกระจายดาเมจ 50% รอบเป้าหมาย', key:'alphapack',
             stage:2, ascendTo:null},
+  hellhound:{id:'hellhound', name:'Hell Hound', icon:'😈', species:'wolf', element:'dark', role:'Berserk · ล่าเดี่ยว', hp:230, atk:55, move:3, range:1,
+            passive:'ทิ้งสัญชาตญาณฝูงแลกพลังนรก — ธาตุกลายเป็น 🌑 Dark (โจมตีสละ HP แลกดาเมจ) · Move 3 ดุดัน', key:'none',
+            stage:2, ascendTo:null},
+  /* --- Bear line ☀️ --- */
   bear:    {id:'bear', name:'Stone Bear', icon:'🐻', species:'bear', role:'Bulwark · ยืนรับ', cost:4, hp:260, atk:28, move:1, range:1,
             passive:'Guard: มิตรข้างเคียงรับดาเมจ -10', key:'guard',
-            stage:0, ascendTo:'bearelder', ascendReq:{type:'damageAbsorbed', amount:80}, ascendCost:2},
+            stage:0, ascendTo:['bearelder','thornbear'], ascendReq:{type:'damageAbsorbed', amount:80}, ascendCost:2},
   bearelder:{id:'bearelder', name:'Elder Bear', icon:'🐻', species:'bear', role:'Bulwark · แผ่นดินเหล็ก', hp:340, atk:34, move:1, range:1,
             passive:'Guard+: มิตรข้างเคียงรับดาเมจ -20', key:'guardplus',
             stage:1, ascendTo:null},
+  thornbear:{id:'thornbear', name:'Thorn Bear', icon:'🐻‍❄️', species:'bear', element:'nature', role:'Bulwark · หนามพิษ', hp:300, atk:32, move:1, range:1,
+            passive:'Guard: มิตรข้างเคียงรับดาเมจ -10 · ธาตุกลายเป็น 🌿 Nature (โจมตีพื้นฐานติดพิษ)', key:'guard',
+            stage:1, ascendTo:null},
+  /* --- Bird line ⚡ --- */
   phoenix: {id:'phoenix', name:'Ember Phoenix', icon:'🦅', species:'bird', role:'Skirmish · Hit & Run', cost:4, hp:150, atk:32, move:2, range:2,
-            passive:'Rebirth: ฟื้นคืนชีพครั้งเดียวที่ 30 HP', key:'rebirth'},
+            passive:'Rebirth: ฟื้นคืนชีพครั้งเดียวที่ 30 HP', key:'rebirth',
+            stage:0, ascendTo:['stormphoenix','solarphoenix'], ascendReq:{type:'surviveTurns', turns:3}, ascendCost:2},
+  stormphoenix:{id:'stormphoenix', name:'Storm Phoenix', icon:'🌩️', species:'bird', role:'Skirmish · จ้าวพายุ', hp:180, atk:40, move:3, range:3,
+            passive:'Rebirth: ฟื้นคืนชีพครั้งเดียวที่ 30 HP · ธาตุ ⚡ Lightning สาดสายฟ้าแรงขึ้น · Range 3', key:'rebirth',
+            stage:1, ascendTo:null},
+  solarphoenix:{id:'solarphoenix', name:'Solar Phoenix', icon:'🕊️', species:'bird', element:'light', role:'Support · แสงแห่งชีวิต', hp:200, atk:32, move:2, range:2,
+            passive:'Rebirth: ฟื้นคืนชีพครั้งเดียวที่ 30 HP · ธาตุกลายเป็น ☀️ Light (ได้ Shield ทุกต้นเทิร์น)', key:'rebirth',
+            stage:1, ascendTo:null},
+  /* --- Dragon line 🌑 --- */
   wyrm:    {id:'wyrm', name:'Frost Wyrm', icon:'🐉', species:'dragon', role:'Hoard · Late Game', cost:5, hp:220, atk:38, move:1, range:2,
-            passive:'Chill: โจมตีแล้วศัตรู Move-1 เทิร์นถัดไป', key:'chill'},
+            passive:'Chill: โจมตีแล้วศัตรู Move-1 เทิร์นถัดไป', key:'chill',
+            stage:0, ascendTo:['abysswyrm','leviathan'], ascendReq:{type:'surviveTurns', turns:3}, ascendCost:3},
+  abysswyrm:{id:'abysswyrm', name:'Abyss Wyrm', icon:'🐲', species:'dragon', role:'Hoard · เหวลึก', hp:260, atk:50, move:1, range:2,
+            passive:'Chill: โจมตีแล้วศัตรู Move-1 · ธาตุ 🌑 Dark สละ HP แลกดาเมจหนัก', key:'chill',
+            stage:1, ascendTo:null},
+  leviathan:{id:'leviathan', name:'Leviathan', icon:'🐋', species:'dragon', element:'water', role:'Hoard · มหาสมุทร', hp:340, atk:40, move:1, range:2,
+            passive:'Chill: โจมตีแล้วศัตรู Move-1 · ธาตุกลายเป็น 💧 Water (โจมตีแล้วฟื้น HP ตัวเอง) · ร่างมหึมา', key:'chill',
+            stage:1, ascendTo:null},
+  /* --- Rabbit line 🌿 --- */
   rabbit:  {id:'rabbit', name:'Moon Rabbit', icon:'🐇', species:'rabbit', role:'Control · คุมตำแหน่ง', cost:2, hp:110, atk:20, move:3, range:1,
-            passive:'Evasion: 30% หลบการโจมตี', key:'evade'},
+            passive:'Evasion: 30% หลบการโจมตี', key:'evade',
+            stage:0, ascendTo:['toxichare','lunarrabbit'], ascendReq:{type:'surviveTurns', turns:3}, ascendCost:2},
+  toxichare:{id:'toxichare', name:'Toxic Hare', icon:'🐰', species:'rabbit', role:'Control · เขี้ยวพิษ', hp:150, atk:26, move:4, range:1,
+            passive:'Evasion: 30% หลบ · ธาตุ 🌿 Nature พิษเข้มข้น · Move 4', key:'evade',
+            stage:1, ascendTo:null},
+  lunarrabbit:{id:'lunarrabbit', name:'Lunar Spirit', icon:'🦄', species:'rabbit', element:'light', role:'Control · วิญญาณจันทรา', hp:160, atk:24, move:3, range:1,
+            passive:'Evasion: 30% หลบ · ธาตุกลายเป็น ☀️ Light (ได้ Shield ทุกต้นเทิร์น)', key:'evade',
+            stage:1, ascendTo:null},
+  /* --- Turtle line 💧 --- */
   turtle:  {id:'turtle', name:'Iron Turtle', icon:'🐢', species:'turtle', role:'Counter · สวนกลับ', cost:3, hp:240, atk:18, move:1, range:1,
-            passive:'Shell Guard: ดาเมจที่ได้รับ -15', key:'shell'},
+            passive:'Shell Guard: ดาเมจที่ได้รับ -15', key:'shell',
+            stage:0, ascendTo:['ancientturtle','spiketurtle'], ascendReq:{type:'damageAbsorbed', amount:60}, ascendCost:2},
+  ancientturtle:{id:'ancientturtle', name:'Ancient Tortoise', icon:'🦕', species:'turtle', role:'Counter · โบราณกาล', hp:340, atk:22, move:1, range:1,
+            passive:'Shell Guard: ดาเมจที่ได้รับ -15 · ธาตุ 💧 Water โจมตีแล้วฟื้น HP · ร่างอึดมหาศาล', key:'shell',
+            stage:1, ascendTo:null},
+  spiketurtle:{id:'spiketurtle', name:'Spike Shell', icon:'🦔', species:'turtle', element:'nature', role:'Counter · หนามพิษ', hp:270, atk:26, move:1, range:1,
+            passive:'Shell Guard: ดาเมจที่ได้รับ -15 · ธาตุกลายเป็น 🌿 Nature (โจมตีพื้นฐานติดพิษ)', key:'shell',
+            stage:1, ascendTo:null},
 };
 const SPECIES_NAME = {wolf:'Wolf', bear:'Bear', bird:'Bird', dragon:'Dragon', rabbit:'Rabbit', turtle:'Turtle'};
-
 /* ---------------- Element System ----------------
    Layer เสริมทับ species เดิม — ไม่แตะ req/card pool เดิมเลย
    ทุกสายมีธาตุประจำตัว 1 ธาตุ ให้ "เอกลักษณ์การเล่น" ที่ทำงานอัตโนมัติ
@@ -403,6 +433,7 @@ const SPECIES_NAME = {wolf:'Wolf', bear:'Bear', bird:'Bird', dragon:'Dragon', ra
      Dark (Dragon)    → Sacrifice: ผู้โจมตีเสีย HP ตัวเองเล็กน้อย แลกดาเมจโบนัส
      Water (Turtle)   → Regen:     ผู้โจมตีฟื้น HP ตัวเองเล็กน้อยทุกครั้งที่ตี
      Light (Bear)     → Aegis:     ไม่ทำงานตอนตี แต่ได้ Shield 8 แต้มให้ตัวเองฟรีทุกต้นเทิร์นอัตโนมัติ (ดูใน startOfTurn)
+   หมายเหตุ: ร่างวิวัฒน์บางร่างมี field `element` ที่ override ธาตุประจำสายไปเลย (ดู elementOf)
 ------------------------------------------------------------------- */
 const ELEMENTS = {
   fire:      {name:'Fire',      icon:'🔥', mechanic:'Burn'},
@@ -413,8 +444,8 @@ const ELEMENTS = {
   light:     {name:'Light',     icon:'☀️', mechanic:'Aegis'},
 };
 const SPECIES_ELEMENT = { wolf:'fire', bear:'light', bird:'lightning', dragon:'dark', rabbit:'nature', turtle:'water' };
-function elementOf(u){ return SPECIES_ELEMENT[u.species] || null; }
-
+/* ธาตุของหน่วย: ใช้ override ราย unit ถ้ามี (ตั้งตอนวิวัฒน์เปลี่ยนธาตุ) ไม่งั้น fallback ตาม species */
+function elementOf(u){ return (u && u.element) || SPECIES_ELEMENT[u.species] || null; }
 /* เรียกจาก doBasicStrike และ discardCardForBasic เท่านั้น (เฉพาะโจมตีพื้นฐาน ไม่ใช่การ์ดสกิล) */
 function applyElementalRider(attacker, target){
   const el=elementOf(attacker);
@@ -426,8 +457,10 @@ function applyElementalRider(attacker, target){
     target.dotKind='poison'; target.dotTurns=Math.max(target.dotTurns||0,3); target.dotDmgPerTurn=(target.dotDmgPerTurn||0)+6;
     log(`🌿 ${target.name} ติดพิษจาก ${attacker.name}! (${target.dotDmgPerTurn} ดาเมจ/เทิร์น)`);
   } else if(el==='lightning'){
+    // Storm Phoenix สาดสายฟ้าแรงขึ้น (60% ของ ATK แทน 40%)
+    const ratio = attacker.tplId==='stormphoenix' ? 0.6 : 0.4;
     const chained=enemiesOf(attacker.owner).find(e=>e.uid!==target.uid && e.hp>0 && dist(e,target)===1);
-    if(chained){ const bonus=Math.floor(attackAtkOf(attacker)*0.4); dealDamage(chained, bonus, {attacker}); log(`⚡ กระแสไฟฟ้าสาดจาก ${target.name} ใส่ ${chained.name} เพิ่ม ${bonus}!`); }
+    if(chained){ const bonus=Math.floor(attackAtkOf(attacker)*ratio); dealDamage(chained, bonus, {attacker}); log(`⚡ กระแสไฟฟ้าสาดจาก ${target.name} ใส่ ${chained.name} เพิ่ม ${bonus}!`); }
   } else if(el==='dark'){
     const cost=8, bonus=15;
     if(attacker.hp>cost){ attacker.hp-=cost; dealDamage(target, bonus, {attacker}); log(`🌑 ${attacker.name} สละ HP ${cost} แลกดาเมจเสริม ${bonus}!`); }
@@ -437,7 +470,6 @@ function applyElementalRider(attacker, target){
     if(attacker.hp>before) log(`💧 ${attacker.name} ฟื้น ${attacker.hp-before} HP จากธาตุน้ำ`);
   }
 }
-
 /* ---------------- AI Temperament ----------------
    ก่อนหน้านี้ AI ศัตรูทุกตัวรุกเข้าหาเป้าหมายเหมือนกันหมด ไม่ว่าจะเป็นสายไหน
    ตอนนี้แต่ละสายมีนิสัยของตัวเอง:
@@ -449,7 +481,6 @@ function applyElementalRider(attacker, target){
 ------------------------------------------------------------------- */
 const AI_STYLE = { wolf:'aggressive', dragon:'aggressive', bear:'guardian', bird:'hitrun', rabbit:'hitrun', turtle:'defensive' };
 function aiStyleOf(u){ return AI_STYLE[u.species] || 'aggressive'; }
-
 /* ---------------- Card pool ----------------
    req:{species} = ใช้ได้เฉพาะบีสต์สายนั้นเป็นผู้ใช้ (Beast card ที่มี req = ลงได้เฉพาะเด็คสายนั้น)
    target: 'enemy' | 'ally' | 'tile' | 'self' | null
@@ -460,33 +491,27 @@ const CARDS = {
   howl:      {type:'Skill', req:{species:'wolf'}, name:'Howl', cost:2, icon:'📣', target:'self', buffSpecies:15, desc:'หมาป่าทุกตัว ATK+15 เทิร์นนี้'},
   leap:      {type:'Skill', req:{species:'wolf'}, name:'Leap', cost:1, icon:'🦶', target:'self', moveBonus:2, desc:'ผู้ใช้ Move+2 ทันที (ไม่จบเทิร์น)'},
   packcall:  {type:'Skill', req:{species:'wolf'}, name:'Pack Call', cost:2, icon:'🐕', target:'tile', summon:'wolfcub', desc:'เรียก Wolf Cub ลงช่องว่างในโซนของคุณ'},
-
   /* --- Bear --- */
   guardstance:{type:'Skill', req:{species:'bear'}, name:'Guard', cost:1, icon:'🛡️', target:'self', shield:20, desc:'ผู้ใช้รับดาเมจ -20 จนถึงเทิร์นหน้า'},
   earthslam: {type:'Skill', req:{species:'bear'}, name:'Earth Slam', cost:3, icon:'💥', target:'self', aoeSelfAdj:35, desc:'ดาเมจ 35 ศัตรูทุกช่องรอบผู้ใช้'},
   roar:      {type:'Skill', req:{species:'bear'}, name:'Roar', cost:2, icon:'🗣️', target:'enemy', range:2, taunt:true, dmg:10, desc:'ดาเมจ 10 + ดึงศัตรูเข้าหาผู้ใช้ 1 ช่อง'},
   fortify:   {type:'Skill', req:{species:'bear'}, name:'Fortify', cost:2, icon:'🧱', target:'ally', hpBonus:40, desc:'บีสต์เป้าหมาย Max HP +40 ถาวร'},
-
   /* --- Bird --- */
   wingdive:  {type:'Skill', req:{species:'bird'}, name:'Wing Dive', cost:2, icon:'🪽', target:'enemy', range:3, dmg:35, retreat:true, desc:'ดาเมจ 35 ระยะ 3 แล้วถอยกลับ 1 ช่อง'},
   updraft:   {type:'Skill', req:{species:'bird'}, name:'Updraft', cost:1, icon:'🌬️', target:'self', moveBonus:3, desc:'ผู้ใช้ Move+3 ทันที'},
   wingstorm: {type:'Skill', req:{species:'bird'}, name:'Wing Storm', cost:3, icon:'🌀', target:'self', aoeRange:2, aoeDmg:25, desc:'ดาเมจ 25 ศัตรูทุกตัวในระยะ 2 ของผู้ใช้'},
-
   /* --- Dragon --- */
   icebreath: {type:'Skill', req:{species:'dragon'}, name:'Ice Breath', cost:3, icon:'❄️', target:'enemy', range:2, dmg:45, freeze:true, desc:'ดาเมจ 45 ระยะ 2 + Freeze 1 เทิร์น'},
   tailsweep: {type:'Skill', req:{species:'dragon'}, name:'Tail Sweep', cost:2, icon:'🌪️', target:'self', aoeSelfAdj:25, desc:'ดาเมจ 25 ศัตรูทุกช่องรอบผู้ใช้'},
   hoard:     {type:'Skill', req:{species:'dragon'}, name:'Hoard', cost:1, icon:'💰', target:'self', energy:2, desc:'รับพลังงาน 2 ทันที (เร่งเข้าท้ายเกม)'},
-
   /* --- Rabbit --- */
   moonhop:   {type:'Skill', req:{species:'rabbit'}, name:'Moon Hop', cost:1, icon:'🌙', target:'self', moveBonus:3, desc:'ผู้ใช้ Move+3 ทันที'},
   lure:      {type:'Skill', req:{species:'rabbit'}, name:'Lure', cost:2, icon:'🥕', target:'enemy', range:3, pull:1, dmg:10, desc:'ดาเมจ 10 + ดึงศัตรูเข้าหาผู้ใช้ 1 ช่อง'},
   distract:  {type:'Skill', req:{species:'rabbit'}, name:'Distract', cost:2, icon:'✨', target:'enemy', range:3, freeze:true, desc:'ศัตรูเป้าหมายข้ามเทิร์นถัดไป'},
-
   /* --- Turtle --- */
   shellguard:{type:'Skill', req:{species:'turtle'}, name:'Shell Guard', cost:1, icon:'🐚', target:'self', shield:25, desc:'ผู้ใช้รับดาเมจ -25 จนถึงเทิร์นหน้า'},
   counter:   {type:'Skill', req:{species:'turtle'}, name:'Counter Shell', cost:2, icon:'↩️', target:'self', counter:true, desc:'ครั้งถัดไปที่ถูกตี สวนกลับดาเมจครึ่งหนึ่ง'},
   shellslam: {type:'Skill', req:{species:'turtle'}, name:'Shell Slam', cost:2, icon:'🪨', target:'enemy', range:1, dmg:25, desc:'ดาเมจ 25 ระยะ 1'},
-
   /* --- Neutral (ทุกสายใส่ได้) --- */
   fireball:  {type:'Spell', name:'Fireball', cost:3, icon:'🔥', target:'enemy', range:2, dmg:40, aoeAdj:20, desc:'ดาเมจ 40 + รอบเป้าหมาย 20 ระยะ 2'},
   heal:      {type:'Spell', name:'Heal', cost:2, icon:'💚', target:'ally', heal:50, desc:'ฟื้นฟู HP 50 ให้บีสต์ฝ่ายเรา'},
@@ -495,7 +520,6 @@ const CARDS = {
   steelarmor:{type:'Tech',  name:'Steel Armor', cost:2, icon:'🛠️', target:'ally', hpBonus:40, desc:'บีสต์เป้าหมาย Max HP +40 ถาวร'},
   scout:     {type:'Tech',  name:'Scout', cost:1, icon:'🔭', target:'self', draw:2, desc:'จั่ว 2 ใบ'},
 };
-
 /* ---------------- Leaders (Companion Deck) ---------------- */
 const LEADERS = {
   wolf: {
@@ -536,7 +560,6 @@ const LEADERS = {
   },
 };
 const NEUTRAL_FILL = ['fireball','heal','frostbolt','spiketrap','steelarmor','scout'];
-
 function makeCard(id){
   if(BEASTS[id]) return {type:'Beast', id, beast:id, cost:BEASTS[id].cost};
   return {...CARDS[id], id};
@@ -550,7 +573,6 @@ function buildDeck(leaderKey){
   return d.slice(0,DECK_SIZE);
 }
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-
 /* ---------------- Deck Builder (ผู้เล่นเลือกเอง) ----------------
    Pool ของผู้เล่น = บีสต์ที่ลงสนามได้ของสาย Leader + การ์ดสกิลสาย Leader + การ์ดกลาง (Spell/Trap/Tech)
    ไม่ให้ข้ามสายกันเพราะ canCast ล็อกไว้อยู่แล้ว — เลือกได้เฉพาะสิ่งที่ใช้ได้จริงในเด็คนั้น
@@ -575,11 +597,10 @@ function buildDeckFromCounts(counts){
   Object.entries(counts).forEach(([id,n])=>{ for(let i=0;i<n;i++) d.push(makeCard(id)); });
   return d;
 }
-
 let uid=1;
 function newBeastUnit(tpl, owner, x, y, isLeader){
   const b=BEASTS[tpl];
-  return { uid:uid++, tplId:tpl, name:b.name, icon:b.icon, species:b.species, owner, x, y,
+  return { uid:uid++, tplId:tpl, name:b.name, icon:b.icon, species:b.species, element:b.element||null, owner, x, y,
     hp:b.hp, maxHp:b.hp, atk:b.atk, move:b.move, baseMove:b.move, freeMove:Math.ceil(b.move/2), range:b.range,
     passiveKey:b.key, passiveText:b.passive, isLeader:!!isLeader,
     hasMoved:false, hasActed:false, rebirthUsed:false, chilledNextMove:0, frozenTurns:0,
@@ -587,7 +608,6 @@ function newBeastUnit(tpl, owner, x, y, isLeader){
     dotTurns:0, dotDmgPerTurn:0, dotKind:null,
     stage:b.stage||0, turnsSurvived:0, dmgAbsorbed:0, packSustainTurns:0 };
 }
-
 const state = {
   turn:'player',
   leaderKey:{player:null, enemy:null},
@@ -603,7 +623,6 @@ const state = {
   enemyDeployCooldown:0,
   pendingHits:[], pendingShake:0,
 };
-
 /* ---------------- Impact FX: procedural sound + screen shake ----------------
    ไม่ใช้ไฟล์เสียงภายนอก — สังเคราะห์เสียง thud/boom สดๆ ด้วย Web Audio API
    เพื่อให้การโดนตี/Ultimate รู้สึกมีน้ำหนักขึ้น (จอสั่น + แฟลชที่ตัวที่โดน + เสียงกระแทก)
@@ -653,17 +672,14 @@ function queueImpactFx(uid, big){
   state.pendingShake=Math.max(state.pendingShake, big?2:1);
   playImpactSound(!!big);
 }
-
 function log(msg){
   const el=document.getElementById('log');
   const line=document.createElement('div'); line.textContent=msg;
   el.appendChild(line); el.scrollTop=el.scrollHeight;
 }
-
 /* ================================================================
    P2P NETWORKING (WebRTC via PeerJS — signaling only, gameplay data
    flows directly browser-to-browser once connected)
-
    Model: whichever side's local `state.turn==='player'` is the one
    allowed to act (every input handler already guards on this), so
    both peers can safely run the *entire unmodified single-player
@@ -676,7 +692,6 @@ function log(msg){
 ================================================================= */
 let NET_MODE=false, netRole=null, netPeer=null, netConn=null, applyingRemote=false;
 let myNetPick=null, opponentNetPick=null;
-
 /* ---------------- Firebase-based WebRTC signaling (แทน PeerJS) ---------------- */
 const fbDb = firebase.database();
 const ICE_SERVERS = { iceServers:[
@@ -684,7 +699,6 @@ const ICE_SERVERS = { iceServers:[
   { urls:'stun:stun1.l.google.com:19302' }
 ]};
 let rtcPC=null, fbRoomRef=null, fbListeners=[], iceQueue=[];
-
 // เก็บ ICE candidate ไว้ก่อนถ้า remote description ยังไม่พร้อม (กันเงื่อนไข race
 // ที่ทำให้ addIceCandidate() พังเงียบๆ แล้วต่อกันไม่ติด ค้างที่ "กำลังเชื่อมต่อ...")
 function tryAddIce(candidate){
@@ -702,7 +716,6 @@ function flushIceQueue(){
     rtcPC.addIceCandidate(new RTCIceCandidate(c)).catch(e=>console.error('ICE add fail', e));
   }
 }
-
 function genRoomCode(){
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let s=''; for(let i=0;i<5;i++) s+=chars[Math.floor(Math.random()*chars.length)];
@@ -730,9 +743,7 @@ function cleanupNet(){
   if(fbRoomRef){ try{ fbRoomRef.child('offer').remove(); fbRoomRef.child('answer').remove(); }catch(e){} fbRoomRef=null; }
   if(rtcPC){ try{ rtcPC.close(); }catch(e){} rtcPC=null; }
 }
-
 function sendNet(msg){ if(netConn && netConn.open) netConn.send(JSON.stringify(msg)); }
-
 function cloneAndSwapState(){
   const c=JSON.parse(JSON.stringify(state));
   ['energy','hand','deck','charge','bulwarkPool','everDeployed','leaderKey'].forEach(k=>{
@@ -888,7 +899,6 @@ document.getElementById('btnJoinConnect').addEventListener('click',()=>{
     }
   }, 15000);
 });
-
 /* ---------------- Setup ---------------- */
 function renderLeaderSelect(){
   const wrap=document.getElementById('leaderGrid'); wrap.innerHTML='';
@@ -910,7 +920,6 @@ function renderLeaderSelect(){
   });
   document.getElementById('leaderSelect').classList.add('show');
 }
-
 function startGame(leaderKey, customCounts, forcedEnemyKey, forcedEnemyCounts){
   getAudioCtx(); // unlock เสียงตั้งแต่คลิกแรกของผู้เล่น (นโยบาย autoplay ของเบราว์เซอร์)
   document.getElementById('deckBuilder').classList.remove('show');
@@ -937,10 +946,8 @@ function startGame(leaderKey, customCounts, forcedEnemyKey, forcedEnemyCounts){
   log(`คู่ต่อสู้: ${LEADERS[enemyKey].title}`);
   render();
 }
-
 /* ---------------- Deck Builder screen ---------------- */
 let draftLeaderKey=null, draftCounts={};
-
 function openDeckBuilder(leaderKey){
   draftLeaderKey=leaderKey;
   draftCounts=defaultCountsForLeader(leaderKey);
@@ -976,9 +983,10 @@ function renderDeckBuilder(){
       const data=isBeast?BEASTS[id]:CARDS[id];
       const cur=draftCounts[id]||0;
       const canInc = cur<DECK_MAX_COPIES && totalNow<DECK_SIZE;
+      const elemKey=isBeast?elementOf(data):(data.req?SPECIES_ELEMENT[data.req.species]:null);
       const row=document.createElement('div'); row.className='deckRow';
       row.innerHTML=`<div class="dricon">${data.icon}</div>
-        <div class="drinfo"><div class="drname">${data.name}</div><div class="drmeta">${isBeast?`⚡${data.cost} · HP${data.hp} ATK${data.atk}`:`⚡${data.cost} · ${data.type}`}</div></div>
+        <div class="drinfo"><div class="drname">${elemKey?ELEMENTS[elemKey].icon+' ':''}${data.name}</div><div class="drmeta">${isBeast?`⚡${data.cost} · HP${data.hp} ATK${data.atk}`:`⚡${data.cost} · ${data.type}`}</div></div>
         <div class="drstepper">
           <button class="drbtn" data-act="dec" ${cur<=0?'disabled':''}>−</button>
           <div class="drcount">${cur}</div>
@@ -1016,7 +1024,6 @@ document.getElementById('deckStartBtn').addEventListener('click',()=>{
   }
   startGame(draftLeaderKey, {...draftCounts});
 });
-
 function inZone(x,y,owner){ return (owner==='player'?PLAYER_ZONE:ENEMY_ZONE).includes(y); }
 function unitAt(x,y){ return state.units.find(u=>u.x===x&&u.y===y&&u.hp>0); }
 function trapAt(x,y){ return state.traps.find(t=>t.x===x&&t.y===y); }
@@ -1025,7 +1032,6 @@ function leaderOf(owner){ return state.units.find(u=>u.owner===owner&&u.isLeader
 function aliveUnits(owner){ return state.units.filter(u=>u.owner===owner&&u.hp>0); }
 function enemiesOf(owner){ return aliveUnits(owner==='player'?'enemy':'player'); }
 function inBoard(x,y){ return x>=0&&x<COLS&&y>=0&&y<ROWS; }
-
 /* ---------------- Species resource ---------------- */
 function gainCharge(owner, n){
   if(!state.leaderKey[owner] || n<=0) return;
@@ -1037,7 +1043,6 @@ function chargeInfo(owner){
   const L=LEADERS[key];
   return {L, cur:state.charge[owner], max:L.resource.threshold, ready:state.charge[owner]>=L.resource.threshold};
 }
-
 /* ---------------- Combat ---------------- */
 function dealDamage(target, amount, opts={}){
   if(target.hp<=0) return;
@@ -1050,12 +1055,10 @@ function dealDamage(target, amount, opts={}){
   target.hp=Math.max(0,target.hp-dmg);
   target.dmgAbsorbed=(target.dmgAbsorbed||0)+dmg; // ใช้เช็คเงื่อนไข Ascend ของสาย Bear
   queueImpactFx(target.uid, !!opts.big);
-
   // Bulwark: เจ้าของเป้าหมายสะสมทุก 20 ดาเมจที่ซับไว้ / Retaliate: +1 ต่อการถูกตี 1 ครั้ง
   const key=state.leaderKey[target.owner];
   if(key==='bear'){ state.bulwarkPool[target.owner]+=dmg; while(state.bulwarkPool[target.owner]>=20){ state.bulwarkPool[target.owner]-=20; gainCharge(target.owner,1); } }
   if(key==='turtle') gainCharge(target.owner,1);
-
   log(`${target.name} ได้รับดาเมจ ${dmg} (HP ${target.hp}/${target.maxHp})`);
   if(target.counterReady && opts.attacker && opts.attacker.hp>0){
     target.counterReady=false;
@@ -1091,12 +1094,17 @@ function doBasicStrike(attacker, target){
   attacker.hasActed=true;
   checkTrap(target); checkWin();
 }
-/* ---------------- Ascend (การ์ด ไม่ใช่ auto) ----------------
+/* ---------------- Ascend + Branching Evolution ----------------
    ทุกบีสต์ที่มี ascendTo จะ "โต" เป็นสเตจถัดไปได้ ก็ต่อเมื่อผู้เล่นกดปุ่ม Ascend เอง
    (ไม่ auto-trigger) และต้องจ่ายพลังงานตามต้นทุนของสเตจปัจจุบัน
+   ascendTo เป็น array = แตกสายวิวัฒน์ → เปิดหน้าเลือก (showEvoChooser)
    HP/ATK ของสเตจใหม่ถูกบวกเป็น "ส่วนต่าง" เข้ากับค่าปัจจุบัน — บัฟ/ดาเมจสะสมที่มีอยู่
-   ไม่หายไป รู้สึกเหมือน "ตัวเดิมโตขึ้น" ไม่ใช่ swap โมเดลใหม่
+   ไม่หายไป รู้สึกเหมือน "ตัวเดิมโตขึ้น" ไม่ใช่ swap โมเดลใหม่ · บางร่างเปลี่ยนธาตุด้วย
 ------------------------------------------------------------------- */
+function ascendOptionsOf(tpl){
+  if(!tpl || !tpl.ascendTo) return [];
+  return Array.isArray(tpl.ascendTo) ? tpl.ascendTo : [tpl.ascendTo];
+}
 function ascendReady(u){
   const tpl=BEASTS[u.tplId];
   if(!tpl || !tpl.ascendTo) return false;
@@ -1125,21 +1133,54 @@ function canAscendNow(u){
 function triggerAscend(u){
   if(state.over || state.turn!==u.owner) return;
   if(!canAscendNow(u)){ if(u.owner==='player'){ setHint('เงื่อนไข Ascend ยังไม่ครบ หรือพลังงานไม่พอ'); render(); } return; }
-  const tpl=BEASTS[u.tplId], newTpl=BEASTS[tpl.ascendTo];
+  const opts=ascendOptionsOf(BEASTS[u.tplId]);
+  if(u.owner==='enemy'){ performAscend(u, opts[Math.floor(Math.random()*opts.length)]); return; }
+  if(opts.length===1){ performAscend(u, opts[0]); return; }
+  showEvoChooser(u, opts); // แตกสาย — ให้ผู้เล่นเลือกเส้นทางวิวัฒน์เอง
+}
+function performAscend(u, newId){
+  const tpl=BEASTS[u.tplId], newTpl=BEASTS[newId];
+  if(!newTpl) return;
   state.energy[u.owner]-=(tpl.ascendCost||0);
   const hpDelta=newTpl.hp-tpl.hp, atkDelta=newTpl.atk-tpl.atk;
+  const oldEl=elementOf(u);
   u.maxHp+=hpDelta; u.hp=Math.max(1,u.hp+hpDelta);
   u.atk+=atkDelta;
-  u.tplId=tpl.ascendTo; u.name=newTpl.name; u.icon=newTpl.icon;
+  u.tplId=newId; u.name=newTpl.name; u.icon=newTpl.icon; u.element=newTpl.element||null;
   u.baseMove=newTpl.move; u.move=newTpl.move; u.freeMove=Math.ceil(newTpl.move/2);
   u.range=newTpl.range; u.passiveKey=newTpl.key; u.passiveText=newTpl.passive;
   u.stage=newTpl.stage!=null?newTpl.stage:(tpl.stage||0)+1;
   u.turnsSurvived=0; u.dmgAbsorbed=0; u.packSustainTurns=0;
   u.hasActed=true;
-  log(`✨ ${tpl.name}${u.owner==='enemy'?' (ศัตรู)':''} Ascend สำเร็จ! กลายเป็น ${newTpl.name} (HP+${hpDelta} ATK+${atkDelta})`);
+  const newEl=elementOf(u);
+  const elemNote = newEl!==oldEl ? ` · ธาตุเปลี่ยนเป็น ${ELEMENTS[newEl].icon} ${ELEMENTS[newEl].name}` : '';
+  log(`✨ ${tpl.name}${u.owner==='enemy'?' (ศัตรู)':''} Ascend สำเร็จ! กลายเป็น ${newTpl.name} (HP+${hpDelta} ATK+${atkDelta})${elemNote}`);
   if(u.owner==='player'){ state.selection=null; setHint('เลือกการ์ดหรือหน่วยของคุณ'); }
   checkWin(); render();
 }
+/* ---------------- Evolution chooser (แตกสายวิวัฒน์) ---------------- */
+function showEvoChooser(u, opts){
+  const box=document.getElementById('evoChoose');
+  const grid=document.getElementById('evoGrid'); grid.innerHTML='';
+  document.getElementById('evoTitle').textContent=`${u.icon} ${u.name} — เลือกสายวิวัฒน์`;
+  opts.forEach(id=>{
+    const b=BEASTS[id];
+    const el2=b.element||SPECIES_ELEMENT[b.species];
+    const card=document.createElement('div'); card.className='leaderCard';
+    card.innerHTML=`<div class="licon">${b.icon}</div>
+      <div class="lname">${b.name}</div>
+      <div class="lrole">${b.role}</div>
+      <div class="ltag">${ELEMENTS[el2].icon} ${ELEMENTS[el2].name} (${ELEMENTS[el2].mechanic})</div>
+      <div class="lline">HP ${b.hp} · ATK ${b.atk} · Move ${b.move} · Range ${b.range}</div>
+      <div class="lline"><b>Passive</b> ${b.passive}</div>`;
+    card.addEventListener('click',()=>{ box.classList.remove('show'); performAscend(u, id); });
+    grid.appendChild(card);
+  });
+  box.classList.add('show');
+}
+document.getElementById('evoCancelBtn').addEventListener('click',()=>{
+  document.getElementById('evoChoose').classList.remove('show');
+});
 function checkTrap(unit){
   const tr=trapAt(unit.x,unit.y);
   if(tr && tr.owner!==unit.owner){
@@ -1176,7 +1217,6 @@ function endGame(winner){
   document.getElementById('overlayMsg').textContent = winner==='player' ? 'YOU WIN!' : 'YOU LOSE...';
   log(winner==='player' ? '🏆 คุณชนะ!' : '☠️ คุณแพ้...');
 }
-
 /* ---------------- Card legality ---------------- */
 function canCast(unit, card){
   if(!card.req) return true;
@@ -1186,7 +1226,6 @@ function reqLabel(card){ return card.req ? `${SPECIES_NAME[card.req.species]} on
 function eligibleCasters(card, owner='player'){
   return aliveUnits(owner).filter(u=>!u.hasActed && canCast(u,card));
 }
-
 /* ---------------- Rendering ---------------- */
 function render(){
   renderTop(); renderBoard(); renderHand();
@@ -1197,12 +1236,12 @@ function render(){
   const sel=state.selection;
   document.getElementById('discardStrikeBtn').disabled = !(state.turn==='player' && !state.over
     && sel && sel.mode==='unit' && !sel.unit.hasActed && state.hand.player.length>0);
-
   const ascendBtn=document.getElementById('ascendBtn');
   const selU = (sel && sel.mode==='unit') ? sel.unit : null;
   const selTpl = selU && BEASTS[selU.tplId];
-  if(selTpl && selTpl.ascendTo){
-    const nextName=BEASTS[selTpl.ascendTo].name;
+  const selOpts = selTpl ? ascendOptionsOf(selTpl) : [];
+  if(selOpts.length){
+    const nextName = selOpts.length>1 ? selOpts.map(id=>BEASTS[id].name).join(' / ') : BEASTS[selOpts[0]].name;
     ascendBtn.textContent = ascendReady(selU) ? `🌟 Ascend → ${nextName} (⚡${selTpl.ascendCost||0})` : `🌟 ${ascendReqLabel(selU)}`;
     ascendBtn.disabled = !(state.turn==='player' && !state.over && canAscendNow(selU));
   } else {
@@ -1245,7 +1284,8 @@ function renderBoard(){
           +(isEligibleCaster?' hl-caster':'')
           +((u.hasMoved&&u.hasActed)?' acted':'')
           +(hitMap.has(u.uid)?(hitMap.get(u.uid)?' hit-flash-big':' hit-flash'):'');
-        el.innerHTML=`${u.isLeader?'<div class="leader-badge">👑</div>':''}${u.stage>0?'<div class="stage-badge">✨</div>':''}<div class="elem-badge" title="${ELEMENTS[elementOf(u)].name}">${ELEMENTS[elementOf(u)].icon}</div><div class="icon">${u.icon}</div>
+        const uel=ELEMENTS[elementOf(u)];
+        el.innerHTML=`${u.isLeader?'<div class="leader-badge">👑</div>':''}${u.stage>0?'<div class="stage-badge">✨</div>':''}<div class="elem-badge" title="${uel.name}">${uel.icon}</div><div class="icon">${u.icon}</div>
           <div class="hpbar"><div class="hpfill" style="width:${Math.max(0,u.hp/u.maxHp*100)}%"></div></div>
           <div class="status">${u.frozenTurns>0?'🧊':''}${u.shield>0?'🛡️':''}${u.counterReady?'↩️':''}${u.dotTurns>0?(u.dotKind==='burn'?'🔥':'🌿'):''}</div>`;
         el.addEventListener('click',(e)=>{ e.stopPropagation(); onUnitClick(u); });
@@ -1297,7 +1337,7 @@ function renderHand(){
       +(discardMode?' pickmode':'')
       +(state.selection&&(state.selection.mode==='deployCard'||state.selection.mode==='castCard')&&state.selection.idx===idx?' pickmode':'');
     let icon,name,stat,elemKey=null;
-    if(card.type==='Beast'){ const b=BEASTS[card.beast]; icon=b.icon; name=b.name; stat=`HP${b.hp} ATK${b.atk} Mv${b.move} Rg${b.range}`; elemKey=SPECIES_ELEMENT[b.species]; }
+    if(card.type==='Beast'){ const b=BEASTS[card.beast]; icon=b.icon; name=b.name; stat=`HP${b.hp} ATK${b.atk} Mv${b.move} Rg${b.range}`; elemKey=b.element||SPECIES_ELEMENT[b.species]; }
     else { icon=card.icon; name=card.name; stat=card.desc; if(card.req) elemKey=SPECIES_ELEMENT[card.req.species]; }
     c.innerHTML=`<div class="ctype">${card.type}</div>${elemKey?`<div class="celem" title="${ELEMENTS[elemKey].name}">${ELEMENTS[elemKey].icon}</div>`:''}${card.req?`<div class="creq">${reqLabel(card)}</div>`:''}
       <div class="cicon">${icon}</div><div class="cname">${name}</div><div class="cstat">${stat}</div><div class="ccost">${card.cost}</div>`;
@@ -1309,7 +1349,8 @@ function showInfo(u){
   const p=document.getElementById('infoPanel');
   const advSteps=Math.max(0,(u.move||0)-(u.freeMove||0));
   const tpl=BEASTS[u.tplId];
-  const ascendLine = (tpl&&tpl.ascendTo) ? `<br><i>Ascend → ${BEASTS[tpl.ascendTo].name} (⚡${tpl.ascendCost||0}): ${ascendReqLabel(u)}</i>` : '';
+  const opts=ascendOptionsOf(tpl);
+  const ascendLine = opts.length ? `<br><i>Ascend → ${opts.map(id=>`${BEASTS[id].icon} ${BEASTS[id].name}`).join(' หรือ ')} (⚡${tpl.ascendCost||0}): ${ascendReqLabel(u)}</i>` : '';
   const el=ELEMENTS[elementOf(u)];
   const dotLine = u.dotTurns>0 ? `<br><i>${u.dotKind==='burn'?'🔥 ติดไฟ':'🌿 ติดพิษ'} ${u.dotDmgPerTurn}/เทิร์น อีก ${u.dotTurns} เทิร์น</i>` : '';
   p.innerHTML=`<b>${u.icon} ${u.name}${u.isLeader?' 👑':''}</b><br>
@@ -1320,7 +1361,6 @@ function showInfo(u){
 }
 function hideInfo(){ document.getElementById('infoPanel').classList.remove('show'); }
 function setHint(t){ document.getElementById('hint').textContent=t; }
-
 /* ---------------- Interaction ---------------- */
 function onCardClick(idx){
   if(state.turn!=='player'||state.over) return;
@@ -1343,7 +1383,6 @@ function onCardClick(idx){
   setHint(`เลือกบีสต์ฝ่ายเรา (ช่องเรืองแสงฟ้า) เป็นผู้ใช้ ${card.name}`);
   render();
 }
-
 function onUnitClick(u){
   if(state.turn!=='player'||state.over) return;
   const sel=state.selection;
@@ -1392,7 +1431,6 @@ function onUnitClick(u){
   setHint(u.hasMoved&&u.hasActed ? `${u.name} ทำครบแล้วในเทิร์นนี้` : `${u.name} — คลิกช่องฟ้าเพื่อเดิน หรือช่องแดงเพื่อโจมตี`);
   render();
 }
-
 function onTileClick(x,y){
   if(state.turn!=='player'||state.over) return;
   const sel=state.selection; if(!sel) return;
@@ -1423,7 +1461,6 @@ function onTileClick(x,y){
     }
   }
 }
-
 function deployBeast(owner, beastKey, x, y, handIdx){
   const unit=newBeastUnit(beastKey, owner, x, y, false);
   state.units.push(unit);
@@ -1442,7 +1479,6 @@ function refillHand(owner){
   while(state.hand[owner].length<HAND_SIZE && state.deck[owner].length>0) state.hand[owner].push(state.deck[owner].shift());
 }
 function drawCards(owner,n){ for(let i=0;i<n&&state.deck[owner].length;i++) state.hand[owner].push(state.deck[owner].shift()); }
-
 /* ---------------- Discard-to-Basic (safety valve) ----------------
    ทิ้งการ์ดใบไหนก็ได้ 1 ใบ (ไม่สนใจ cost/req/type) เพื่อ:
    - เดินต่อจาก freeMove ไปจนถึง move เต็ม (pickDiscardForMove), หรือ
@@ -1455,7 +1491,6 @@ function discardCardForBasic(idx, sel){
   state.hand.player.splice(idx,1);
   if(state.leaderKey.player==='rabbit') gainCharge('player',1); // Tempo: ยังนับเป็นการทิ้งการ์ด
   refillHand('player');
-
   if(sel.mode==='pickDiscardForMove'){
     const {unit,x,y}=sel;
     moveUnitTo(unit,x,y); unit.hasMoved=true;
@@ -1473,7 +1508,6 @@ function discardCardForBasic(idx, sel){
   state.selection=null;
   checkWin(); render();
 }
-
 /* ---------------- Generic card resolver ---------------- */
 function resolveCard(idx, ctx, owner='player'){
   const card=state.hand[owner][idx];
@@ -1508,7 +1542,6 @@ function resolveCard(idx, ctx, owner='player'){
   if(owner==='player'){ state.selection=null; setHint('เลือกการ์ดหรือหน่วยของคุณ'); }
   checkWin(); render();
 }
-
 /* ---------------- Ultimate ---------------- */
 function onUltimateClick(){
   const ci=chargeInfo('player'); if(!ci||!ci.ready||state.turn!=='player'||state.over) return;
@@ -1548,7 +1581,6 @@ function fireUltimate(target, owner='player'){
   if(owner==='player'){ state.selection=null; setHint('เลือกการ์ดหรือหน่วยของคุณ'); }
   checkWin(); render();
 }
-
 /* ---------------- Turn flow ---------------- */
 document.getElementById('cancelBtn').addEventListener('click',()=>{ state.selection=null; setHint('เลือกการ์ดหรือหน่วยของคุณ'); render(); });
 document.getElementById('restartBtn').addEventListener('click',()=>{
@@ -1570,7 +1602,6 @@ document.getElementById('discardStrikeBtn').addEventListener('click',()=>{
   setHint(`เลือกเป้าหมายศัตรูในระยะ ${sel.unit.range}+${DISCARD_STRIKE_RANGE_BONUS} เพื่อโจมตีพื้นฐาน (จะทิ้งการ์ด 1 ใบ)`);
   render();
 });
-
 function startOfTurn(owner){
   const key=state.leaderKey[owner];
   if(key==='wolf') gainCharge(owner, aliveUnits(owner).filter(u=>u.species==='wolf').length); // Pack
@@ -1592,7 +1623,7 @@ function startOfTurn(owner){
       u.dotTurns--;
       if(u.dotTurns<=0){ u.dotDmgPerTurn=0; u.dotKind=null; }
     }
-    // Element — Light (Bear): Aegis ได้ Shield 8 แต้มฟรีทุกต้นเทิร์นอัตโนมัติ
+    // Element — Light (Bear/ร่างธาตุแสง): Aegis ได้ Shield 8 แต้มฟรีทุกต้นเทิร์นอัตโนมัติ
     if(u.hp>0 && elementOf(u)==='light'){ u.shield=(u.shield||0)+8; }
   });
   checkWin();
@@ -1613,13 +1644,12 @@ function endPlayerTurn(){
   render();
   setTimeout(enemyTurn, 450);
 }
-
 /* ---------------- Enemy AI ----------------
    ลำดับการตัดสินใจต่อเทิร์น:
    1) Ultimate ทันทีถ้าชาร์จเต็ม (Dragon เลือกเป้าหมาย HP ต่ำสุด)
    2) การ์ดเสริม (heal/buff/trap) ที่ไม่กินแอ็กชันของตัวหน่วย
    3) วางบีสต์ — เลือกใบที่แรงที่สุดที่จ่ายไหว ไม่ใช่ถูกที่สุด
-   4) Ascend ตัวที่ครบเงื่อนไขก่อนให้มันไปกระทำการ
+   4) Ascend ตัวที่ครบเงื่อนไขก่อนให้มันไปกระทำการ (สุ่มสายวิวัฒน์เอง)
    5) ต่อหน่วย: ลองใช้การ์ดสกิลโจมตีก่อน ถ้าไม่มีค่อยเดิน (หลบกับดักที่รู้ตำแหน่ง + หยุดในระยะเมื่อเป็นตัวยิงไกล)
       แล้วเลือกเป้าหมายแบบจบเกม/HP ต่ำสุดแทนการสุ่มตัวที่ใกล้สุด
 ------------------------------------------------------------------- */
@@ -1627,7 +1657,6 @@ function enemyTurn(){
   if(state.over) return;
   state.energy.enemy=Math.min(10,state.energy.enemy+1);
   startOfTurn('enemy');
-
   const ci=chargeInfo('enemy');
   if(ci && ci.ready && leaderOf('enemy')){
     if(state.leaderKey.enemy==='dragon'){
@@ -1638,10 +1667,8 @@ function enemyTurn(){
     }
   }
   if(state.over){ render(); return; }
-
   tryEnemySupportCards();
   if(state.over){ render(); return; }
-
   if(state.enemyDeployCooldown>0) state.enemyDeployCooldown--;
   if(state.enemyDeployCooldown<=0){
     const beastOptions=state.hand.enemy.map((c,i)=>({c,i})).filter(o=>o.c.type==='Beast'&&o.c.cost<=state.energy.enemy);
@@ -1660,18 +1687,14 @@ function enemyTurn(){
       }
     }
   }
-
   aliveUnits('enemy').forEach(u=>{ if(!u.hasActed && canAscendNow(u)) triggerAscend(u); });
   if(state.over){ render(); return; }
-
   aliveUnits('enemy').forEach(u=>{
     if(u.hasActed || state.over) return;
     const targets=aliveUnits('player'); if(!targets.length) return;
     enemyActWithUnit(u, targets);
   });
-
   checkWin(); if(state.over){ render(); return; }
-
   state.turn='player';
   state.energy.player=Math.min(10,state.energy.player+1);
   startOfTurn('player');
@@ -1680,7 +1703,6 @@ function enemyTurn(){
   log('— เทิร์นของคุณ —');
   render();
 }
-
 /* การ์ดเสริม: heal คนเลือด<65%, buffSpecies ตอนมีฝูง, hpBonus ให้ตัวเลือดสูงสุด, วางกับดักในโซนผู้เล่น */
 function tryEnemySupportCards(){
   let acted=true, guard=0;
@@ -1707,7 +1729,6 @@ function tryEnemySupportCards(){
     }
   }
 }
-
 /* ลองหาการ์ดโจมตี/AOE ที่ดีที่สุดให้หน่วย u ใช้จากตำแหน่งปัจจุบัน — คืนค่า true ถ้าได้ใช้ */
 function tryEnemyCastCard(u, targets){
   if(u.hasActed) return false;
@@ -1739,7 +1760,6 @@ function tryEnemyCastCard(u, targets){
   resolveCard(bestIdx, bestCtx, 'enemy');
   return true;
 }
-
 /* หน่วยสาย defensive (เช่น Turtle) ใช้ตอนไม่มีเป้าหมายอยู่ในระยะ: ตั้งการ์ด Shield/Counter รอไว้แทนการเดินเข้าหา */
 function tryEnemyDefensiveCard(u){
   const hand=state.hand.enemy;
@@ -1755,12 +1775,10 @@ function tryEnemyDefensiveCard(u){
   }
   return false;
 }
-
 /* จุดตัดสินใจต่อหน่วยศัตรู 1 ตัว — แยกพฤติกรรมตามนิสัยของสาย (aiStyleOf) แทนตรรกะรุกเดียวแบบเดิม */
 function enemyActWithUnit(u, targets){
   if(u.hasActed || state.over) return;
   const style=aiStyleOf(u);
-
   if(style==='defensive'){
     const inRangeNow=targets.filter(t=>dist(u,t)<=u.range);
     if(inRangeNow.length){
@@ -1773,7 +1791,6 @@ function enemyActWithUnit(u, targets){
     log(`🐢 ${u.name} ตั้งท่ารอรับ ไม่รุกเข้าหา`);
     return;
   }
-
   if(style==='hitrun'){
     if(tryEnemyCastCard(u, targets)) return; // การ์ดหลายใบของสายนี้ถอยเองอยู่แล้ว (เช่น Wing Dive)
     const inRange=targets.filter(t=>dist(u,t)<=u.range);
@@ -1797,7 +1814,6 @@ function enemyActWithUnit(u, targets){
     }
     return;
   }
-
   if(style==='guardian'){
     if(tryEnemyCastCard(u, targets)) return;
     const inRange=targets.filter(t=>dist(u,t)<=u.range);
@@ -1820,7 +1836,6 @@ function enemyActWithUnit(u, targets){
     }
     return;
   }
-
   // aggressive (ค่าเริ่มต้น) — ไล่ล่าเป้าหมายตรงๆ เหมือนเดิม
   if(tryEnemyCastCard(u, targets)) return;
   const inRange=targets.filter(t=>dist(u,t)<=u.range);
@@ -1834,7 +1849,6 @@ function enemyActWithUnit(u, targets){
     }
   }
 }
-
 /* เลือกเป้าหมายโจมตีพื้นฐาน: จบตัวได้ก่อน ไม่งั้นเอา HP ต่ำสุด (ใกล้สุดตัดสิน) */
 function pickBestTarget(u, list){
   if(!list.length) return null;
@@ -1866,7 +1880,6 @@ function moveTowardAvoidingTraps(u, target){
   if(cx!==u.x||cy!==u.y){ u.x=cx; u.y=cy; checkTrap(u); }
   u.hasMoved=true;
 }
-
 /* หน้าจอแรกคือ #netLobby (เลือกเล่นกับ AI / Host / Join) — renderLeaderSelect() จะถูกเรียกจากปุ่มในหน้านั้นแทน */
 </script>
 </body>
